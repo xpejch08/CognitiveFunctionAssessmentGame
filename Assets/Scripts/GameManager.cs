@@ -14,6 +14,13 @@ public class GameManager : MonoBehaviour
     
     public static event UnityAction shapeMissed;
     
+    public static event UnityAction nextLevel;
+    public static event UnityAction firstLevel;
+    
+    public static event UnityAction<string> changeText;
+    public static event UnityAction<string> changeTextSquare;
+    public static event UnityAction<string> changeTextCircle;
+    
     public static event Action<GameState> OnGameStateChanged;
     void Awake()
     {
@@ -58,6 +65,27 @@ public class GameManager : MonoBehaviour
         shapeMissed?.Invoke();
     }
     
+    public static void ChangeText(string newText)
+    {
+        changeText?.Invoke(newText);
+    }
+    
+    public static void NextLevel()
+    {
+        nextLevel?.Invoke();
+    }
+    public static void RestartClicked()
+    {
+        firstLevel?.Invoke();
+    }
+    public static void ChangeTextSquare(string newText)
+    {
+        changeTextSquare?.Invoke(newText);
+    }
+    public static void ChangeTextCircle(string newText)
+    {
+        changeTextCircle?.Invoke(newText);
+    }
 }
 
 public enum GameState

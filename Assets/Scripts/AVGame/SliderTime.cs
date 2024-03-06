@@ -5,9 +5,12 @@ using UnityEngine.UI;
 public class TimeBar : MonoBehaviour
 {
     public Slider timeSlider;
-    public float gameTime = 60f;
-
+    private float _gameTime = 60f;
+    private float _timeAccelerationCoeficient = 1f;
+    private float _timeRemaining;
+    private float increaseInterval = 10f;
     private float timeRemaining;
+    private float _maxTimeAcceleration = 2f;
 
     private void Awake()
     {
@@ -17,21 +20,25 @@ public class TimeBar : MonoBehaviour
 
     private void Start()
     {
-        timeRemaining = gameTime;
-        timeSlider.maxValue = gameTime;
-        timeSlider.value = gameTime;
+        timeRemaining = _gameTime;
+        timeSlider.maxValue = _gameTime;
+        timeSlider.value = _gameTime;
     }
 
     private void Update()
     {
         if (timeRemaining > 0)
         {
-            timeRemaining -= Time.deltaTime;
+            timeRemaining -= Time.deltaTime * _timeAccelerationCoeficient;
             timeSlider.value = timeRemaining;
         }
         else
         {
             return;
+        }
+        if(_timeAccelerationCoeficient < _maxTimeAcceleration)
+        {
+            _timeAccelerationCoeficient += 0.0001f;
         }
     }
     
@@ -51,9 +58,9 @@ public class TimeBar : MonoBehaviour
     
     private void checkTimeOverflow()
     {
-        if (timeRemaining > gameTime)
+        if (timeRemaining > _gameTime)
         {
-            timeRemaining = gameTime;
+            timeRemaining = _gameTime;
         }
     }
 }
