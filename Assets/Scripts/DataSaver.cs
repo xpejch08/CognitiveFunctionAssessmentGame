@@ -15,6 +15,7 @@ public class DataToSave
     public float fastestReactionTimeTriangles;
     public float fastestReactionTimeCircles;
     public float fastestReactionTimeDiamond;
+    public float fastestReactionTimeAudio;
     public int maxObjectCount;
     public string shapeType;
 }
@@ -35,6 +36,7 @@ public class DataSaver : MonoBehaviour
         _dataToSave.fastestReactionTimeTriangles = _initialReactionTime;
         _dataToSave.fastestReactionTimeCircles = _initialReactionTime;
         _dataToSave.fastestReactionTimeDiamond = _initialReactionTime;
+        _dataToSave.fastestReactionTimeAudio = _initialReactionTime;
         _dataToSave.maxObjectCount = 0;
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         auth = FirebaseAuth.DefaultInstance;
@@ -72,6 +74,10 @@ public class DataSaver : MonoBehaviour
             _DiamondCount--;
             UpdateFastestReactionTime(data.fastestReactionTimeDiamond, data.shapeType);
         }
+        if(data.shapeType == "audio")
+        {
+            UpdateFastestReactionTime(data.fastestReactionTimeAudio, data.shapeType);
+        }
         if (_SquareCount == 0 && _TriangleCount == 0 && _CircleCount == 0 && _DiamondCount == 0)
         {
             return false;
@@ -96,6 +102,10 @@ public class DataSaver : MonoBehaviour
         if (shapeType == "diamond" && reactionTime < _dataToSave.fastestReactionTimeDiamond)
         {
             _dataToSave.fastestReactionTimeDiamond = reactionTime;
+        }
+        if (shapeType == "audio" && reactionTime < _dataToSave.fastestReactionTimeAudio)
+        {
+            _dataToSave.fastestReactionTimeAudio = reactionTime;
         }
     }
     
