@@ -34,6 +34,7 @@ public class TimedSprite : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         _canAddTime = false;
+        GameManager.ShapeMissed();
         
         StartBeepRoutine();
     }

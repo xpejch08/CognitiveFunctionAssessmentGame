@@ -10,7 +10,7 @@ public class ToggleCircle : MonoBehaviour
     private const float RandomAppearanceIntervalMax = 6f;
     private const float RandomAppearanceIntervalMin = 2f;
     private const float VisibleInterval = 3f;
-    private const float AddingCirclesTimer = 10f;
+    private const float AddingCirclesTimer = 40f;
     private const float InitialReactionTime = 1000f;
     private float _reactionTime = 0f;
     private float _timeShapeAppeared = 0f;
@@ -64,6 +64,7 @@ public class ToggleCircle : MonoBehaviour
     {   
         yield return new WaitForSeconds(delay);
         ToggleVisibility();
+        ObjectCountEvents.ObjectAppeared();
         _timeShapeAppeared = Time.time;
         _currentHideCircleCoroutine = HideCircleAfterVisibleDelay();
         StartCoroutine(_currentHideCircleCoroutine);
@@ -73,6 +74,7 @@ public class ToggleCircle : MonoBehaviour
     {
         yield return new WaitForSeconds(VisibleInterval);
         ToggleVisibility();
+        ObjectCountEvents.ObjectDisappeared();
         GameManager.ShapeMissed();
         RandomAppearance();
     }
@@ -83,6 +85,7 @@ public class ToggleCircle : MonoBehaviour
             StopActiveCoroutine();
             burst.Play();
             ToggleVisibility();
+            ObjectCountEvents.ObjectDisappeared();
             _reactionTime = Time.time - _timeShapeAppeared;
             UpdateReactionTime();
             RandomAppearance();

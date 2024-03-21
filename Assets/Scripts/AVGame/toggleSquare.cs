@@ -57,6 +57,7 @@ public class ToggleSquare : MonoBehaviour
     {   
         yield return new WaitForSeconds(delay);
         ToggleVisibility();
+        ObjectCountEvents.ObjectAppeared();
         _timeShapeAppeared = Time.time;
         _currentHideSquareCoroutine = HideSquareAfterVisibleDelay();
         StartCoroutine(_currentHideSquareCoroutine);
@@ -66,6 +67,7 @@ public class ToggleSquare : MonoBehaviour
     {
         yield return new WaitForSeconds(VisibleInterval);
         ToggleVisibility();
+        ObjectCountEvents.ObjectDisappeared();
         GameManager.ShapeMissed();
         RandomAppearance();
     }
@@ -76,6 +78,7 @@ public class ToggleSquare : MonoBehaviour
             StopActiveCoroutine();
             burst.Play();
             ToggleVisibility();
+            ObjectCountEvents.ObjectDisappeared();
             _reactionTime = Time.time - _timeShapeAppeared;
             UpdateReactionTime();
             RandomAppearance();

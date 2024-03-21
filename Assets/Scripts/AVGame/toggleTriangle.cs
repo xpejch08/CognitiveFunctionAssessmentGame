@@ -62,6 +62,7 @@ public class ToggleTriangle : MonoBehaviour
     {   
         yield return new WaitForSeconds(delay);
         ToggleVisibility();
+        ObjectCountEvents.ObjectAppeared();
         _timeShapeAppeared = Time.time;
         _currentHideTriangleCoroutine = HideTriangleAfterVisibleDelay();
         StartCoroutine(_currentHideTriangleCoroutine);
@@ -71,6 +72,7 @@ public class ToggleTriangle : MonoBehaviour
     {
         yield return new WaitForSeconds(VisibleInterval);
         ToggleVisibility();
+        ObjectCountEvents.ObjectDisappeared();
         GameManager.ShapeMissed();
         RandomAppearance();
     }
@@ -81,6 +83,7 @@ public class ToggleTriangle : MonoBehaviour
             StopActiveCoroutine();
             burst.Play();
             ToggleVisibility();
+            ObjectCountEvents.ObjectDisappeared();
             _reactionTime = Time.time - _timeShapeAppeared;
             UpdateReactionTime();
             RandomAppearance();

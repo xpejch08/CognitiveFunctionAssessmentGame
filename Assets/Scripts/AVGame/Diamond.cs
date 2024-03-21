@@ -10,6 +10,10 @@ public class Diamond : MonoBehaviour
     private const float RandomAppearanceIntervalMax = 15f;
     private const float RandomAppearanceIntervalMin = 10f;
     private const float VisibleInterval = 1f;
+    private const float InitialReactionTime = 1000f;
+    private float _reactionTime = 0f;
+    private float _timeShapeAppeared = 0f;
+    private DataToSave _dataToSave = new DataToSave();
     private IEnumerator _currentRandomAppearanceCoroutine;
     private IEnumerator _currentHideTriangleCoroutine;
     private SpriteRenderer _spriteRenderer;
@@ -19,8 +23,21 @@ public class Diamond : MonoBehaviour
     {
         
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        GameManager.avFinished += SendDataToSave;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _dataToSave.fastestReactionTimeDiamond = InitialReactionTime;
+        _dataToSave.shapeType = "diamond";
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
+    }
+    
+    private void SendDataToSave()
+    {
+        if (this == null || _spriteRenderer == null) return;
+        LogStatisticsEvents.SendPLayerStatistics(_dataToSave);
+        _dataToSave.fastestReactionTimeDiamond = InitialReactionTime;
+        _reactionTime = 0;
+        Destroy(gameObject);
     }
     
     private IEnumerator StartAfterCountdown()
@@ -47,6 +64,8 @@ public class Diamond : MonoBehaviour
     {   
         yield return new WaitForSeconds(delay);
         ToggleVisibility();
+        ObjectCountEvents.ObjectAppeared();
+        _timeShapeAppeared = Time.time;
         _currentHideTriangleCoroutine = HideTriangleAfterVisibleDelay();
         StartCoroutine(_currentHideTriangleCoroutine);
     }
@@ -55,6 +74,7 @@ public class Diamond : MonoBehaviour
     {
         yield return new WaitForSeconds(VisibleInterval);
         ToggleVisibility();
+        ObjectCountEvents.ObjectDisappeared();
         RandomAppearance();
     }
     private void OnMouseDown()
@@ -64,7 +84,18 @@ public class Diamond : MonoBehaviour
             GameManager.ShapeClicked();
             StopActiveCoroutine();
             ToggleVisibility();
+            ObjectCountEvents.ObjectDisappeared();
+            _reactionTime = Time.time - _timeShapeAppeared;
+            UpdateReactionTime();
             RandomAppearance();
+        }
+    }
+    
+    private void UpdateReactionTime()
+    {
+        if (_reactionTime < _dataToSave.fastestReactionTimeDiamond)
+        {
+            _dataToSave.fastestReactionTimeDiamond = _reactionTime;
         }
     }
     
