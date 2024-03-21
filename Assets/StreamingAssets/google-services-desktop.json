@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "90369520567",
+    "firebase_url": "https://bachelorthesis-e4fc0-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "bachelorthesis-e4fc0",
+    "storage_bucket": "bachelorthesis-e4fc0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90369520567:android:6b2e9343fb087cc0daee32",
+        "android_client_info": {
+          "package_name": "com.xpejch08.BachelorThesis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf2OsthQ1hqmB48mP3xNkbuhzDl-nc9yI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

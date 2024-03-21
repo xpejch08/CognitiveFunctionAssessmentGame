@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ReasoningTriangle : MonoBehaviour
 {
@@ -9,6 +11,13 @@ public class ReasoningTriangle : MonoBehaviour
     private int _currentValue;
     private string _intervalDisplay;
     private int _firstValue = 1;
+    private int _clickedCount = 0;
+    private SpriteRenderer _triangleObject;
+    private int _sum = 0;
+    
+    private int _maxValue;
+    private int _minValue;
+    private int _midValue;
     
     
     private void AddTwoValues()
@@ -20,10 +29,14 @@ public class ReasoningTriangle : MonoBehaviour
         }
     }
 
-    private void GenerateRandomValue()
-    {
-        int randomIndex = Random.Range(0, _potentialValues.Count - 1);
-        _currentValue = _potentialValues[randomIndex];
+    private void GenerateSumWithRandomIntervalNumbers()
+    {   
+        for (int i = 0; i < _clickedCount; i++)
+        {
+            int randomIndex = Random.Range(0, _potentialValues.Count - 1); 
+            _sum += _potentialValues[randomIndex];
+        }
+        GameManager.SendSumTriangle(_sum);
     }
     
     private void CreateStringWithInterval()
@@ -35,20 +48,79 @@ public class ReasoningTriangle : MonoBehaviour
         
     }
     
-    private void NextLevelClicked()
+    private void CountMinMaxMid()
     {
+        _maxValue = _potentialValues[_potentialValues.Count - 1] * _clickedCount;
+        _midValue = _potentialValues[_potentialValues.Count / 2] * _clickedCount;
+        _minValue = _potentialValues[0] * _clickedCount;
+    }
+
+    private void OnMouseDown()
+    {
+        _clickedCount++;
+        string count = _clickedCount.ToString();
+        GameManager.ChangeTriangleCount(count);
+        CountMinMaxMid();
+        MinMaxMidEvents.SendMinMaxMidTriangle(_minValue, _maxValue, _midValue);
+    }
+
+    private void SubtractCount()
+    {
+        _clickedCount--;
+        if(_clickedCount < 0)
+        {
+            _clickedCount = 0;
+        }
+        string count = _clickedCount.ToString();
+        GameManager.ChangeTriangleCount(count);
+        CountMinMaxMid();
+        MinMaxMidEvents.SendMinMaxMidTriangle(_minValue, _maxValue, _midValue);
+    }
+    private void ResetCount()
+    {
+        _clickedCount = 0;
+        string count = _clickedCount.ToString();
+        GameManager.ChangeTriangleCount(count);
+    }
+
+    private void ResetMinMaxMid()
+    {
+        _maxValue = 0;
+        _midValue = 0;
+        _minValue = 0;
+        MinMaxMidEvents.SendMinMaxMidTriangle(0,0,0);
+    }
+
+    private void NextLevelClicked()
+    {   
+        ResetMinMaxMid();
+        ResetCount();
         AddTwoValues();
-        GenerateRandomValue();
+        CreateStringWithInterval();
+        GameManager.ChangeText(_intervalDisplay);
+    }
+    private void RestartClicked()
+    {
+        ResetMinMaxMid();
+        ResetCount();   
+        _potentialValues.Clear();
+        _firstValue = 1;
+        AddTwoValues();
         CreateStringWithInterval();
         GameManager.ChangeText(_intervalDisplay);
     }
     void Start()
     {
         AddTwoValues();
-        GenerateRandomValue();
         CreateStringWithInterval();
+        _triangleObject = GetComponent<SpriteRenderer>();
         GameManager.nextLevel += NextLevelClicked;
+        GameManager.firstLevel += RestartClicked;
+        GameManager.triangleSubtract += SubtractCount;
+        GameManager.levelFinished += GenerateSumWithRandomIntervalNumbers;
         GameManager.ChangeText(_intervalDisplay);
+        GameManager.ChangeTriangleCount("0");
+        MinMaxMidEvents.SendMinMaxMidTriangle(0,0,0);
     }
     
 }

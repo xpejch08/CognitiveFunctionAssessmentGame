@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class TimeBar : MonoBehaviour
 {
     public Slider timeSlider;
-    private float _gameTime = 60f;
+    private float _gameTime = 5f;
     private float _timeAccelerationCoeficient = 1f;
     private float _timeRemaining;
     private float increaseInterval = 10f;
@@ -26,7 +26,7 @@ public class TimeBar : MonoBehaviour
     }
 
     private void Update()
-    {
+    {   
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime * _timeAccelerationCoeficient;
@@ -34,12 +34,24 @@ public class TimeBar : MonoBehaviour
         }
         else
         {
-            return;
+            TimeOut();
         }
         if(_timeAccelerationCoeficient < _maxTimeAcceleration)
         {
             _timeAccelerationCoeficient += 0.0001f;
         }
+    }
+    
+    private void TimeOut()
+    {
+        RestartGame();
+        GameManager.AVFinished();
+    }
+    
+    private void RestartGame()
+    {
+        timeRemaining = _gameTime;
+        timeSlider.value = _gameTime;
     }
     
     private void AddTimeToSlider()

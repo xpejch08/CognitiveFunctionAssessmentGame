@@ -20,6 +20,18 @@ public class GameManager : MonoBehaviour
     public static event UnityAction<string> changeText;
     public static event UnityAction<string> changeTextSquare;
     public static event UnityAction<string> changeTextCircle;
+    public static event UnityAction<string> changeCountTriangle;
+    public static event UnityAction<string> changeCountSquare;
+    public static event UnityAction<string> changeCountCircle;
+    public static event UnityAction<int> sendSumSquare;
+    public static event UnityAction<int> sendSumCircle;
+    public static event UnityAction<int> sendSumTriangle;
+    public static event UnityAction triangleSubtract;
+    public static event UnityAction squareSubtract;
+    public static event UnityAction circleSubtract;
+    public static event UnityAction levelFinished;
+    public static event UnityAction avFinished;
+    
     
     public static event Action<GameState> OnGameStateChanged;
     void Awake()
@@ -86,6 +98,52 @@ public class GameManager : MonoBehaviour
     {
         changeTextCircle?.Invoke(newText);
     }
+    public static void TriangleSubtract()
+    {
+        triangleSubtract?.Invoke();
+    }
+    public static void SquareSubtract()
+    {
+        squareSubtract?.Invoke();
+    }
+    public static void CircleSubtract()
+    {
+        circleSubtract?.Invoke();
+    }
+    public static void ChangeTriangleCount(string newText)
+    {
+        changeCountTriangle?.Invoke(newText);
+    }
+    public static void ChangeSquareCount(string newText)
+    {
+        changeCountSquare?.Invoke(newText);
+    }
+    public static void ChangeCircleCount(string newText)
+    {
+        changeCountCircle?.Invoke(newText);
+    }
+    public static void SendSumSquare(int sum)
+    {
+        sendSumSquare?.Invoke(sum);
+    }
+    public static void SendSumTriangle(int sum)
+    {
+        sendSumTriangle?.Invoke(sum);
+    }
+    public static void SendSumCircle(int sum)
+    {
+        sendSumCircle?.Invoke(sum);
+    }
+
+    public static void LevelFinished()
+    {
+        levelFinished?.Invoke();
+    }
+    public static void AVFinished()
+    {
+        avFinished?.Invoke();
+    }
+
 }
 
 public enum GameState
