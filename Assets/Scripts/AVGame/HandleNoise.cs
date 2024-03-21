@@ -13,10 +13,8 @@ public class TimedSprite : MonoBehaviour
 
     void Start()
     {
-        // Ensure the collider is set to be trigger to detect mouse clicks
         GetComponent<Collider2D>().isTrigger = true;
-
-        // Start the initial beep routine
+        
         StartBeepRoutine();
     }
 
@@ -31,13 +29,12 @@ public class TimedSprite : MonoBehaviour
         yield return new WaitForSeconds(randomInterval);
 
         _canAddTime = true;
-        audioSource.Play(); // Play beep sound
+        audioSource.Play();
 
-        yield return new WaitForSeconds(2); // Wait for 2 seconds to allow press
+        yield return new WaitForSeconds(2);
 
         _canAddTime = false;
         
-        // Automatically restart the routine
         StartBeepRoutine();
     }
 
@@ -46,7 +43,7 @@ public class TimedSprite : MonoBehaviour
         if (_canAddTime)
         {
             Debug.Log("Correct timing! Time added.");
-            _canAddTime = false; // Reset the flag
+            _canAddTime = false;
             Handheld.Vibrate();
             
             StopAllCoroutines();

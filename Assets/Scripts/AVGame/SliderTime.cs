@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class TimeBar : MonoBehaviour
 {
     public Slider timeSlider;
-    private float _gameTime = 5f;
+    private float _gameTime = 60f;
     private float _timeAccelerationCoeficient = 1f;
     private float _timeRemaining;
     private float increaseInterval = 10f;

@@ -10,17 +10,24 @@ public class ToggleSquare : MonoBehaviour
     private const float RandomAppearanceIntervalMax = 6f;
     private const float RandomAppearanceIntervalMin = 2f;
     private const float VisibleInterval = 3f;
+    private const float InitialReactionTime = 1000f;
     private const float AddingSquaresTimer = 20f;
+    private float _reactionTime = 0f;
+    private float _timeShapeAppeared = 0f;
     private IEnumerator _currentRandomAppearanceCoroutine;
     private IEnumerator _currentHideSquareCoroutine;
     private SpriteRenderer _spriteRenderer;
+    private DataToSave _dataToSave = new DataToSave();
     private bool Clickable = false;
     public AudioSource burst;
+    
 
 
     private void Start()
     {
-        
+        GameManager.avFinished += SendDataToSave;
+        _dataToSave.fastestReactionTimeSquares = InitialReactionTime;
+        _dataToSave.shapeType = "square";
         _spriteRenderer = GetComponent<SpriteRenderer>();
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
@@ -50,6 +57,7 @@ public class ToggleSquare : MonoBehaviour
     {   
         yield return new WaitForSeconds(delay);
         ToggleVisibility();
+        _timeShapeAppeared = Time.time;
         _currentHideSquareCoroutine = HideSquareAfterVisibleDelay();
         StartCoroutine(_currentHideSquareCoroutine);
     }
@@ -68,11 +76,28 @@ public class ToggleSquare : MonoBehaviour
             StopActiveCoroutine();
             burst.Play();
             ToggleVisibility();
+            _reactionTime = Time.time - _timeShapeAppeared;
+            UpdateReactionTime();
             RandomAppearance();
         }
     }
     
-    //todo clean up
+    private void SendDataToSave()
+    {
+        if (this == null || _spriteRenderer == null) return;
+        LogStatisticsEvents.SendPLayerStatistics(_dataToSave);
+        _dataToSave.fastestReactionTimeSquares = InitialReactionTime;
+        _reactionTime = 0;
+        Destroy(gameObject);
+    }
+    
+    private void UpdateReactionTime()
+    {
+        if (_reactionTime < _dataToSave.fastestReactionTimeSquares)
+        {
+            _dataToSave.fastestReactionTimeSquares = _reactionTime;
+        }
+    }
     private void StopActiveCoroutine()
     {
         if (_currentRandomAppearanceCoroutine != null)

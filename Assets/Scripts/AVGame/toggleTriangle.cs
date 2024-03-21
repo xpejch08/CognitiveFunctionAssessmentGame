@@ -10,6 +10,10 @@ public class ToggleTriangle : MonoBehaviour
     private const float RandomAppearanceIntervalMax = 6f;
     private const float RandomAppearanceIntervalMin = 2f;
     private const float VisibleInterval = 3f;
+    private const float InitialReactionTime = 1000f;
+    private float _reactionTime = 0f;
+    private float _timeShapeAppeared = 0f;
+    private DataToSave _dataToSave = new DataToSave();
     private IEnumerator _currentRandomAppearanceCoroutine;
     private IEnumerator _currentHideTriangleCoroutine;
     private SpriteRenderer _spriteRenderer;
@@ -18,8 +22,10 @@ public class ToggleTriangle : MonoBehaviour
 
     private void Start()
     {
-        
+        GameManager.avFinished += SendDataToSave;
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _dataToSave.fastestReactionTimeTriangles = InitialReactionTime;
+        _dataToSave.shapeType = "triangle";
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
     }
@@ -30,7 +36,15 @@ public class ToggleTriangle : MonoBehaviour
         Clickable = true;
         RandomAppearance();
     }
-
+    
+    private void SendDataToSave()
+    {
+        if (this == null || _spriteRenderer == null) return;
+        LogStatisticsEvents.SendPLayerStatistics(_dataToSave);
+        _dataToSave.fastestReactionTimeTriangles = InitialReactionTime;
+        _reactionTime = 0;
+        Destroy(gameObject);
+    }
     private IEnumerator TurnOffOnCountdown(float countDownInterval)
     {
         yield return new WaitForSeconds(countDownInterval);
@@ -48,6 +62,7 @@ public class ToggleTriangle : MonoBehaviour
     {   
         yield return new WaitForSeconds(delay);
         ToggleVisibility();
+        _timeShapeAppeared = Time.time;
         _currentHideTriangleCoroutine = HideTriangleAfterVisibleDelay();
         StartCoroutine(_currentHideTriangleCoroutine);
     }
@@ -66,7 +81,17 @@ public class ToggleTriangle : MonoBehaviour
             StopActiveCoroutine();
             burst.Play();
             ToggleVisibility();
+            _reactionTime = Time.time - _timeShapeAppeared;
+            UpdateReactionTime();
             RandomAppearance();
+        }
+    }
+    
+    private void UpdateReactionTime()
+    {
+        if (_reactionTime < _dataToSave.fastestReactionTimeTriangles)
+        {
+            _dataToSave.fastestReactionTimeTriangles = _reactionTime;
         }
     }
     

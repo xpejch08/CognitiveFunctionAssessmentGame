@@ -10,7 +10,11 @@ public class ToggleCircle : MonoBehaviour
     private const float RandomAppearanceIntervalMax = 6f;
     private const float RandomAppearanceIntervalMin = 2f;
     private const float VisibleInterval = 3f;
-    private const float AddingCirclesTimer = 40f;
+    private const float AddingCirclesTimer = 10f;
+    private const float InitialReactionTime = 1000f;
+    private float _reactionTime = 0f;
+    private float _timeShapeAppeared = 0f;
+    private DataToSave _dataToSave = new DataToSave();
     private IEnumerator _currentRandomAppearanceCoroutine;
     private IEnumerator _currentHideCircleCoroutine;
     private SpriteRenderer _spriteRenderer;
@@ -19,10 +23,21 @@ public class ToggleCircle : MonoBehaviour
 
     private void Start()
     {
-        
+        GameManager.avFinished += SendDataToSave;
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _dataToSave.fastestReactionTimeCircles = InitialReactionTime;
+        _dataToSave.shapeType = "circle";
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
+    }
+    
+    private void SendDataToSave()
+    {
+        if (this == null || _spriteRenderer == null) return;
+        LogStatisticsEvents.SendPLayerStatistics(_dataToSave);
+        _dataToSave.fastestReactionTimeCircles = InitialReactionTime;
+        _reactionTime = 0;
+        Destroy(gameObject);
     }
     
     private IEnumerator StartAfterCountdown()
@@ -49,6 +64,7 @@ public class ToggleCircle : MonoBehaviour
     {   
         yield return new WaitForSeconds(delay);
         ToggleVisibility();
+        _timeShapeAppeared = Time.time;
         _currentHideCircleCoroutine = HideCircleAfterVisibleDelay();
         StartCoroutine(_currentHideCircleCoroutine);
     }
@@ -67,7 +83,17 @@ public class ToggleCircle : MonoBehaviour
             StopActiveCoroutine();
             burst.Play();
             ToggleVisibility();
+            _reactionTime = Time.time - _timeShapeAppeared;
+            UpdateReactionTime();
             RandomAppearance();
+        }
+    }
+    
+    private void UpdateReactionTime()
+    {
+        if (_reactionTime < _dataToSave.fastestReactionTimeCircles)
+        {
+            _dataToSave.fastestReactionTimeCircles = _reactionTime;
         }
     }
     
