@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
+
+
 [Serializable]
 public class DataToSave
 {
@@ -16,6 +18,7 @@ public class DataToSave
     public float fastestReactionTimeCircles;
     public float fastestReactionTimeDiamond;
     public float fastestReactionTimeAudio;
+    public float timeLasted;
     public int maxObjectCount;
     public string shapeType;
 }
@@ -117,10 +120,19 @@ public class DataSaver : MonoBehaviour
             _maxObjectCountReached = true;
         }
     }
+    private void SetTimeLasted(DataToSave data)
+    {
+        if (_dataToSave.timeLasted == 0)
+        { 
+            _dataToSave.timeLasted = data.timeLasted;   
+        }
+        
+    }
     
     //todo clean
     public void SaveData(DataToSave data)
     {
+        SetTimeLasted(data);
         CheckMaxObjectCount(data);
         if (DecreaseSquareCount(data))
         {
@@ -151,6 +163,8 @@ public class DataSaver : MonoBehaviour
         _dataToSave.fastestReactionTimeTriangles = _initialReactionTime;
         _dataToSave.fastestReactionTimeCircles = _initialReactionTime;
         _dataToSave.fastestReactionTimeDiamond = _initialReactionTime;
+        _dataToSave.fastestReactionTimeAudio = _initialReactionTime;
+        _dataToSave.timeLasted = 0;
         _dataToSave.maxObjectCount = 0;
         _SquareCount = 6;
         _CircleCount = 6;

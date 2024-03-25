@@ -8,8 +8,10 @@ public class TimeBar : MonoBehaviour
     private float _gameTime = 60f;
     private float _timeAccelerationCoeficient = 1f;
     private float _timeRemaining;
+    private DataToSave _dataToSave = new DataToSave();
     private float increaseInterval = 10f;
     private float timeRemaining;
+    private float _timeLasted;
     private float _maxTimeAcceleration = 2f;
 
     private void Awake()
@@ -30,6 +32,7 @@ public class TimeBar : MonoBehaviour
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime * _timeAccelerationCoeficient;
+            _timeLasted += Time.deltaTime;
             timeSlider.value = timeRemaining;
         }
         else
@@ -45,8 +48,11 @@ public class TimeBar : MonoBehaviour
     private void TimeOut()
     {
         RestartGame();
+        _dataToSave.timeLasted = _timeLasted;
+        LogStatisticsEvents.SendPLayerStatistics(_dataToSave);    
         GameManager.AVFinished();
     }
+    
     
     private void RestartGame()
     {

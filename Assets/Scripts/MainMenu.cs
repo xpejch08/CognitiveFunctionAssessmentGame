@@ -8,6 +8,10 @@ public class MainMenu : MonoBehaviour
    {
        UnityEngine.SceneManagement.SceneManager.LoadScene("MainScene");
    }
+   public void Statistics()
+   {
+       UnityEngine.SceneManagement.SceneManager.LoadScene("Stats");
+   }
    
    public void quitGame()
    {
