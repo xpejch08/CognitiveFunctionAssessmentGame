@@ -24,11 +24,21 @@ public class Diamond : MonoBehaviour
         
         _spriteRenderer = GetComponent<SpriteRenderer>();
         GameManager.avFinished += SendDataToSave;
+        GameManager.backButtonPressed += DestroyObject;
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _dataToSave.fastestReactionTimeDiamond = InitialReactionTime;
         _dataToSave.shapeType = "diamond";
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
+    }
+    
+    private void OnDestroy()
+    {
+        GameManager.backButtonPressed -= DestroyObject;
+    }
+    private void DestroyObject()
+    {
+        Destroy(gameObject);
     }
     
     private void SendDataToSave()

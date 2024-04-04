@@ -18,6 +18,7 @@ public class ReasoningSquare : MonoBehaviour
     private int _minValue;
     private int _midValue;
     private int _sum = 0;
+    private bool _canAddShape = true;
     private SpriteRenderer _squareObject;
     
     
@@ -67,11 +68,19 @@ public class ReasoningSquare : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        _clickedCount++;
-        string count = _clickedCount.ToString();
-        GameManager.ChangeSquareCount(count);
-        CountMinMaxMid();
-        MinMaxMidEvents.SendMinMaxMidSquare(_minValue, _maxValue, _midValue);
+        if (_canAddShape)
+        {
+            _clickedCount++;
+            string count = _clickedCount.ToString();
+            GameManager.ChangeSquareCount(count);
+            MinMaxMidEvents.SendClickedCountSquare(1);
+            CountMinMaxMid();
+            MinMaxMidEvents.SendMinMaxMidSquare(_minValue, _maxValue, _midValue);   
+        }
+    }
+    private void SetCanAddShape(bool canAddShape)
+    {
+        _canAddShape = canAddShape;
     }
     private void SubtractCount()
     {
@@ -79,6 +88,10 @@ public class ReasoningSquare : MonoBehaviour
         if (_clickedCount < 0)
         {
             _clickedCount = 0;
+        }
+        else
+        {
+            MinMaxMidEvents.SendClickedCountSquare(-1);
         }
         string count = _clickedCount.ToString();
         GameManager.ChangeSquareCount(count);
@@ -96,6 +109,7 @@ public class ReasoningSquare : MonoBehaviour
     private void ResetCount()
     {
         _clickedCount = 0;
+        _canAddShape = true;
         string count = _clickedCount.ToString();
         GameManager.ChangeSquareCount(count);
     }
@@ -139,6 +153,7 @@ public class ReasoningSquare : MonoBehaviour
         GameManager.firstLevel += RestartClicked;
         GameManager.squareSubtract += SubtractCount;
         GameManager.levelFinished += GenerateSumWithRandomIntervalNumbers;
+        MinMaxMidEvents.sendClickedCountSum += SetCanAddShape;
         GameManager.ChangeTextSquare(_intervalDisplay);
         GameManager.ChangeSquareCount("0");
         MinMaxMidEvents.SendMinMaxMidSquare(0,0,0);

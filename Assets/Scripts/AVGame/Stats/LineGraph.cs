@@ -10,33 +10,33 @@ public class LineGraph : MonoBehaviour
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
     public DataGetter _dataGetter;
+    public string type;
     private List<float> scores = new List<float>();
     private Dictionary<string, List<float>> typeToListMap;
 
-    private void Awake()
+    protected void Awake()
     {
-        LogStatisticsEvents.dataRetrieved += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedTriangles += OnDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
-        _dataGetter.GetPlayerData();
     }
-    
-    private void OnDestroy()
+    private void Start()
     {
-        LogStatisticsEvents.dataRetrieved -= OnDataRetrieved;
+        _dataGetter.GetPlayerData(type);
+    }
+    protected void OnDestroy()
+    {
+        LogStatisticsEvents.dataRetrievedTriangles -= OnDataRetrieved;
     }
     //todo clean code
-    private void OnDataRetrieved()
+    protected virtual void OnDataRetrieved()
     {
         CreateAxis();
         CreateTicks();
-        ShowNextGraph("triangles");
-        ShowNextGraph("squares");
-        ShowNextGraph("circles");
-        ShowNextGraph("diamonds");
+        ShowNextGraph(type);
     }
 
-    private void InitializeTypeToListMap()
+    protected void InitializeTypeToListMap()
     {
         typeToListMap = new Dictionary<string, List<float>>
         {
@@ -50,7 +50,7 @@ public class LineGraph : MonoBehaviour
         };
     }
 
-    private void ShowNextGraph(string type)
+    protected void ShowNextGraph(string type)
     {   
         scores.Clear();
         if (typeToListMap.TryGetValue(type, out var selectedScores))
@@ -66,11 +66,11 @@ public class LineGraph : MonoBehaviour
         ShowGraph(scores);
     }
 
-    private void RemoveDefaultFromData()
+    protected void RemoveDefaultFromData()
     {
         scores.RemoveAll(x => x == 1000);
     }
-    private GameObject CreatePrefab(Vector2 anchoredPosition)
+    protected GameObject CreatePrefab(Vector2 anchoredPosition)
     {
         GameObject gameObject = new GameObject("point", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);
@@ -85,7 +85,7 @@ public class LineGraph : MonoBehaviour
         return gameObject;
     }
 
-    private void ShowGraph(List<float> valueList)
+    protected void ShowGraph(List<float> valueList)
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
         float graphWidth = graphContainer.sizeDelta.x - 130;
@@ -108,7 +108,7 @@ public class LineGraph : MonoBehaviour
     }
 
 
-    private void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
+    protected void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
     {
         GameObject gameObject = new GameObject("dotConnection", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);
@@ -123,13 +123,13 @@ public class LineGraph : MonoBehaviour
         rectTransform.localEulerAngles = new Vector3(0, 0, GetAngleFromVector(dir));
     }
     
-    private float GetAngleFromVector(Vector2 dir)
+    protected float GetAngleFromVector(Vector2 dir)
     {
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         return angle;
     }
     
-    private void CreateAxis()
+    protected void CreateAxis()
     {
         float paddingLeftAxis = 430f;
         float paddingBottomAxis = 370f;
@@ -141,14 +141,14 @@ public class LineGraph : MonoBehaviour
         
         Vector2 bottomLeft = new Vector2(padding, padding);
         
-        GameObject bottomAxis = CreateAxisLine(new Vector2(graphWidth, 2f), 
+        GameObject bottomAxis = CreateAxisLine(new Vector2(graphWidth, 4f), 
                                 new Vector2(paddingBottomAxis, shiftBottom)); 
-        GameObject leftAxis = CreateAxisLine(new Vector2(2f, graphHeight-40), 
+        GameObject leftAxis = CreateAxisLine(new Vector2(4f, graphHeight-40), 
                                 new Vector2(shiftLeft, paddingLeftAxis));
 
     }
 
-    private GameObject CreateAxisLine(Vector2 size, Vector2 anchoredPosition)
+    protected GameObject CreateAxisLine(Vector2 size, Vector2 anchoredPosition)
     {
         GameObject gameObject = new GameObject("axis", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);
@@ -162,7 +162,7 @@ public class LineGraph : MonoBehaviour
         return gameObject;
     }
 
-    private void CreateTicks()
+    protected void CreateTicks()
     {
         float graphHeight = graphContainer.sizeDelta.y;
         float yMaximum = 3f;
@@ -179,7 +179,7 @@ public class LineGraph : MonoBehaviour
 
 
 
-    private GameObject CreateTick(Vector2 size, Vector2 anchoredPosition)
+    protected GameObject CreateTick(Vector2 size, Vector2 anchoredPosition)
     {
         GameObject gameObject = new GameObject("tick", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);

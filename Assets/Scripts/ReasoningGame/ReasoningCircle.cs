@@ -18,6 +18,7 @@ public class ReasoningCircle : MonoBehaviour
     private int _maxValue;
     private int _minValue;
     private int _midValue;
+    private bool _canAddShape = true;
     private SpriteRenderer _circleObject;
     
     
@@ -67,11 +68,15 @@ public class ReasoningCircle : MonoBehaviour
 
     private void OnMouseDown()
     {
-        _clickedCount++;
-        string count = _clickedCount.ToString();
-        GameManager.ChangeCircleCount(count);
-        CountMinMaxMid();
-        MinMaxMidEvents.SendMinMaxMidCircle(_minValue, _maxValue, _midValue);
+        if (_canAddShape)
+        {
+            MinMaxMidEvents.SendClickedCountCircle(1);
+            _clickedCount++;
+            string count = _clickedCount.ToString();
+            GameManager.ChangeCircleCount(count);
+            CountMinMaxMid();
+            MinMaxMidEvents.SendMinMaxMidCircle(_minValue, _maxValue, _midValue);   
+        }
     }
 
     private void SubtractCount()
@@ -80,6 +85,10 @@ public class ReasoningCircle : MonoBehaviour
         if (_clickedCount < 0)
         {
             _clickedCount = 0;
+        }
+        else
+        {
+            MinMaxMidEvents.SendClickedCountCircle(-1);
         }
         string count = _clickedCount.ToString();
         GameManager.ChangeCircleCount(count);
@@ -98,6 +107,7 @@ public class ReasoningCircle : MonoBehaviour
     private void ResetCount()
     {
         _clickedCount = 0;
+        _canAddShape = true;
         string count = _clickedCount.ToString();
         GameManager.ChangeCircleCount(count);
     }
@@ -109,6 +119,12 @@ public class ReasoningCircle : MonoBehaviour
         _minValue = 0;
         MinMaxMidEvents.SendMinMaxMidCircle(0,0,0);
     }
+
+    private void SetCanAddShape(bool canAddShape)
+    {
+        _canAddShape = canAddShape;
+    }
+    
     private void NextLevelClicked()
     {
         ResetMinMaxMid();
@@ -141,6 +157,7 @@ public class ReasoningCircle : MonoBehaviour
         GameManager.firstLevel += RestartClicked;
         GameManager.circleSubtract += SubtractCount;
         GameManager.levelFinished += GenerateSumWithRandomIntervalNumbers;
+        MinMaxMidEvents.sendClickedCountSum += SetCanAddShape;
         GameManager.ChangeTextCircle(_intervalDisplay);
         GameManager.ChangeCircleCount("0");
         MinMaxMidEvents.SendMinMaxMidCircle(0,0,0);

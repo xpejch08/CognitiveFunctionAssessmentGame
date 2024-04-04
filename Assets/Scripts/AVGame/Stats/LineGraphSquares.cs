@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine.UI;
 
-public class LineGraph : MonoBehaviour
+public class LineGraphSquares : MonoBehaviour
 {
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
@@ -16,17 +16,17 @@ public class LineGraph : MonoBehaviour
 
     protected void Awake()
     {
-        LogStatisticsEvents.dataRetrieved += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedSquares += OnDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
     private void Start()
     {
-        _dataGetter.GetPlayerData();
+        _dataGetter.GetPlayerData(type);
     }
     protected void OnDestroy()
     {
-        LogStatisticsEvents.dataRetrieved -= OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedSquares -= OnDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()

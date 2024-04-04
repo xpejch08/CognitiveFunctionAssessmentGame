@@ -21,6 +21,7 @@ public class DataToSave
     public float timeLasted;
     public int maxObjectCount;
     public string shapeType;
+    public string GameType = "AV";
 }
 public class DataSaver : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class DataSaver : MonoBehaviour
     private bool _maxObjectCountReached = false;
     private DataToSave _dataToSave = new DataToSave();
 
-    void Awake() {
+    private void Awake() {
         _dataToSave.fastestReactionTimeSquares = _initialReactionTime;
         _dataToSave.fastestReactionTimeTriangles = _initialReactionTime;
         _dataToSave.fastestReactionTimeCircles = _initialReactionTime;
@@ -142,6 +143,7 @@ public class DataSaver : MonoBehaviour
         {
             return;
         }
+        //check necesity of next line
         _dataToSave.playerId = data.playerId;
         if (auth.CurrentUser == null)
         {

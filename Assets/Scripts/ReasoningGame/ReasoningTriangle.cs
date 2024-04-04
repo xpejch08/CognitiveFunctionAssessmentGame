@@ -14,6 +14,7 @@ public class ReasoningTriangle : MonoBehaviour
     private int _clickedCount = 0;
     private SpriteRenderer _triangleObject;
     private int _sum = 0;
+    private bool _canAddShape = true;
     
     private int _maxValue;
     private int _minValue;
@@ -57,11 +58,19 @@ public class ReasoningTriangle : MonoBehaviour
 
     private void OnMouseDown()
     {
-        _clickedCount++;
-        string count = _clickedCount.ToString();
-        GameManager.ChangeTriangleCount(count);
-        CountMinMaxMid();
-        MinMaxMidEvents.SendMinMaxMidTriangle(_minValue, _maxValue, _midValue);
+        if (_canAddShape)
+        {
+            _clickedCount++;
+            string count = _clickedCount.ToString();
+            GameManager.ChangeTriangleCount(count);
+            MinMaxMidEvents.SendClickedCountTriangle(1);
+            CountMinMaxMid();
+            MinMaxMidEvents.SendMinMaxMidTriangle(_minValue, _maxValue, _midValue);   
+        }
+    }
+    private void SetCanAddShape(bool canAddShape)
+    {
+        _canAddShape = canAddShape;
     }
 
     private void SubtractCount()
@@ -71,6 +80,10 @@ public class ReasoningTriangle : MonoBehaviour
         {
             _clickedCount = 0;
         }
+        else
+        {
+            MinMaxMidEvents.SendClickedCountTriangle(-1);
+        }
         string count = _clickedCount.ToString();
         GameManager.ChangeTriangleCount(count);
         CountMinMaxMid();
@@ -79,6 +92,7 @@ public class ReasoningTriangle : MonoBehaviour
     private void ResetCount()
     {
         _clickedCount = 0;
+        _canAddShape = true;
         string count = _clickedCount.ToString();
         GameManager.ChangeTriangleCount(count);
     }
@@ -118,6 +132,7 @@ public class ReasoningTriangle : MonoBehaviour
         GameManager.firstLevel += RestartClicked;
         GameManager.triangleSubtract += SubtractCount;
         GameManager.levelFinished += GenerateSumWithRandomIntervalNumbers;
+        MinMaxMidEvents.sendClickedCountSum += SetCanAddShape;
         GameManager.ChangeText(_intervalDisplay);
         GameManager.ChangeTriangleCount("0");
         MinMaxMidEvents.SendMinMaxMidTriangle(0,0,0);

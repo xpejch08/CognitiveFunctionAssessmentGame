@@ -26,11 +26,21 @@ public class ToggleSquare : MonoBehaviour
     private void Start()
     {
         GameManager.avFinished += SendDataToSave;
+        GameManager.backButtonPressed += DestroyObject;
         _dataToSave.fastestReactionTimeSquares = InitialReactionTime;
         _dataToSave.shapeType = "square";
         _spriteRenderer = GetComponent<SpriteRenderer>();
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
+    }
+    
+    private void OnDestroy()
+    {
+        GameManager.backButtonPressed -= DestroyObject;
+    }
+    private void DestroyObject()
+    {
+        Destroy(gameObject);
     }
     
     private IEnumerator StartAfterCountdown()

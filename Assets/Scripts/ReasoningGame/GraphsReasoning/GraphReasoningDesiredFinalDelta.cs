@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using TMPro;
 using UnityEngine.UI;
 
 public class GraphReasoningDesiredFinalDelta : MonoBehaviour
@@ -11,12 +12,14 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     private RectTransform graphContainer;
     public DataGetterReasoning _dataGetter;
     public string type;
+    public TextMeshProUGUI percentileText;
     private List<int> scores = new List<int>();
     private Dictionary<string, List<int>> typeToListMap;
 
     protected void Awake()
     {
         LogStatisticsEvents.dataRetrievedDesiredFinalDelta += OnDataRetrieved;
+        LogStatisticsEvents.allDataRetrievedFinalDelta += OnAllDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
@@ -27,6 +30,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     protected void OnDestroy()
     {
         LogStatisticsEvents.dataRetrievedDesiredFinalDelta -= OnDataRetrieved;
+        LogStatisticsEvents.allDataRetrievedFinalDelta -= OnAllDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()
@@ -34,6 +38,12 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
         CreateAxis();
         CreateTicks();
         ShowNextGraph(type);
+        _dataGetter.GetAllPlayerAverages();
+    }
+    private void OnAllDataRetrieved()
+    {
+        string percentile = _dataGetter.percentile.ToString();
+        percentileText.text = "You are in the " + percentile + "th percentile in Reasoning game players";
     }
 
     protected void InitializeTypeToListMap()
@@ -86,14 +96,14 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
         float graphWidth = graphContainer.sizeDelta.x - 130;
-        float yMaximum = 500f;
+        float yMaximum = 100f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
         GameObject lastPointObject = null;
         for(int i = 0; i < valueList.Count; i++)
         {
             float xPosition = 65 + i * xStep;
-            float yPosition = (valueList[i] / yMaximum) * graphHeight + 75; // Offset for the bottom
+            float yPosition = (valueList[i] / yMaximum) * graphHeight + 480; // Offset for the bottom
             GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition));
             if (lastPointObject != null)
             {
@@ -132,7 +142,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
         float paddingBottomAxis = 370f;
         float padding = 30f;
         float shiftLeft = 65f;
-        float shiftBottom = 75f;
+        float shiftBottom = 480f;
         float graphWidth = graphContainer.sizeDelta.x;
         float graphHeight = graphContainer.sizeDelta.y;
         

@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     public static event UnityAction circleSubtract;
     public static event UnityAction levelFinished;
     public static event UnityAction avFinished;
+    public static event UnityAction backButtonPressed;
     
     
     public static event Action<GameState> OnGameStateChanged;
@@ -142,6 +143,10 @@ public class GameManager : MonoBehaviour
     public static void AVFinished()
     {
         avFinished?.Invoke();
+    }
+    public static void BackButtonPressed()
+    {
+        backButtonPressed?.Invoke();
     }
 
 }

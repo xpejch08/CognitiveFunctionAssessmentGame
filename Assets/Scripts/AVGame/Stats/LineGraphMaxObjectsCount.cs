@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine.UI;
 
-public class LineGraphTimeLasted : MonoBehaviour
+public class LineGraphMaxObjectsCount : MonoBehaviour
 {
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
@@ -16,7 +16,7 @@ public class LineGraphTimeLasted : MonoBehaviour
 
     protected void Awake()
     {
-        LogStatisticsEvents.dataRetrievedTimeLasted += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedMaxObjectCount += OnDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
@@ -26,7 +26,7 @@ public class LineGraphTimeLasted : MonoBehaviour
     }
     protected void OnDestroy()
     {
-        LogStatisticsEvents.dataRetrievedTimeLasted -= OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedMaxObjectCount -= OnDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()
@@ -89,7 +89,7 @@ public class LineGraphTimeLasted : MonoBehaviour
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
         float graphWidth = graphContainer.sizeDelta.x - 130;
-        float yMaximum = 3f;
+        float yMaximum = 16f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
         GameObject lastPointObject = null;

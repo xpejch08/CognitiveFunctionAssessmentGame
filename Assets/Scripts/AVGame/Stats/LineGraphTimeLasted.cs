@@ -3,20 +3,23 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using TMPro;
 using UnityEngine.UI;
 
-public class LineGraphSquares : MonoBehaviour
+public class LineGraphTimeLasted : MonoBehaviour
 {
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
     public DataGetter _dataGetter;
     public string type;
     private List<float> scores = new List<float>();
+    public TextMeshProUGUI percentileText;
     private Dictionary<string, List<float>> typeToListMap;
 
     protected void Awake()
     {
-        LogStatisticsEvents.dataRetrievedSquares += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedTimeLasted += OnDataRetrieved;
+        LogStatisticsEvents.allDataRetrievedTimeLasted += OnAllDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
@@ -26,7 +29,8 @@ public class LineGraphSquares : MonoBehaviour
     }
     protected void OnDestroy()
     {
-        LogStatisticsEvents.dataRetrievedSquares -= OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedTimeLasted -= OnDataRetrieved;
+        LogStatisticsEvents.allDataRetrievedTimeLasted -= OnAllDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()
@@ -34,6 +38,12 @@ public class LineGraphSquares : MonoBehaviour
         CreateAxis();
         CreateTicks();
         ShowNextGraph(type);
+        _dataGetter.GetAllPlayerAverages();
+    }
+    private void OnAllDataRetrieved()
+    {
+        string percentile = _dataGetter.percentile.ToString();
+        percentileText.text = "You are in the " + percentile + "th percentile in AV game players";
     }
 
     protected void InitializeTypeToListMap()
@@ -89,7 +99,7 @@ public class LineGraphSquares : MonoBehaviour
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
         float graphWidth = graphContainer.sizeDelta.x - 130;
-        float yMaximum = 3f;
+        float yMaximum = 150f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
         GameObject lastPointObject = null;

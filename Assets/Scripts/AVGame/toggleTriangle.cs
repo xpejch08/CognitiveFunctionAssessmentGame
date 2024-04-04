@@ -23,13 +23,22 @@ public class ToggleTriangle : MonoBehaviour
     private void Start()
     {
         GameManager.avFinished += SendDataToSave;
+        GameManager.backButtonPressed += DestroyObject;
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _dataToSave.fastestReactionTimeTriangles = InitialReactionTime;
         _dataToSave.shapeType = "triangle";
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
     }
+    private void OnDestroy()
+    {
+        GameManager.backButtonPressed -= DestroyObject;
+    }
     
+    private void DestroyObject()
+    {
+        Destroy(gameObject);
+    }
     private IEnumerator StartAfterCountdown()
     {
         yield return new WaitForSeconds(CountdownInterval);

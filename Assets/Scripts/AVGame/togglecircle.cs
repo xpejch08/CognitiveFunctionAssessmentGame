@@ -24,11 +24,22 @@ public class ToggleCircle : MonoBehaviour
     private void Start()
     {
         GameManager.avFinished += SendDataToSave;
+        GameManager.backButtonPressed += DestroyObject;
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _dataToSave.fastestReactionTimeCircles = InitialReactionTime;
         _dataToSave.shapeType = "circle";
         StartCoroutine(TurnOffOnCountdown(CountdownInterval));
         StartCoroutine(StartAfterCountdown());
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.backButtonPressed -= DestroyObject;
+    }
+
+    private void DestroyObject()
+    {
+        Destroy(gameObject);
     }
     
     private void SendDataToSave()

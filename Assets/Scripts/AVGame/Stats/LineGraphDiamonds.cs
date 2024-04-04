@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine.UI;
 
-public class LineGraphSquares : MonoBehaviour
+public class LineGraphDiamonds : MonoBehaviour
 {
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
@@ -16,7 +16,7 @@ public class LineGraphSquares : MonoBehaviour
 
     protected void Awake()
     {
-        LogStatisticsEvents.dataRetrievedSquares += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedDiamonds += OnDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
@@ -26,7 +26,7 @@ public class LineGraphSquares : MonoBehaviour
     }
     protected void OnDestroy()
     {
-        LogStatisticsEvents.dataRetrievedSquares -= OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedDiamonds -= OnDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()

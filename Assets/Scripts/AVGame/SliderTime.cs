@@ -18,6 +18,15 @@ public class TimeBar : MonoBehaviour
     {
         GameManager.onShapeClicked += AddTimeToSlider;
         GameManager.shapeMissed += SubtractTimeFromSlider;
+        GameManager.backButtonPressed += DestroySlider;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.onShapeClicked -= AddTimeToSlider;
+        GameManager.shapeMissed -= SubtractTimeFromSlider;
+        GameManager.backButtonPressed -= DestroySlider;
+        
     }
 
     private void Start()
@@ -26,7 +35,12 @@ public class TimeBar : MonoBehaviour
         timeSlider.maxValue = _gameTime;
         timeSlider.value = _gameTime;
     }
-
+    
+    private void DestroySlider()
+    {
+        Destroy(gameObject);
+    }
+ 
     private void Update()
     {   
         if (timeRemaining > 0)

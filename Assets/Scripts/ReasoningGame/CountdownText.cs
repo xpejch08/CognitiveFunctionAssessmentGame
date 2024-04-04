@@ -10,7 +10,7 @@ using Unity.VisualScripting;
 public class CountdownTimer : MonoBehaviour
 {
     private int _countdownTime = 20;
-    private int _firstLevelTime = 5;
+    private int _firstLevelTime = 20;
     private int _countdownSubtract = 5;
     private int _nextLevelTime;
     private int _currentLevel = 1;
@@ -20,7 +20,10 @@ public class CountdownTimer : MonoBehaviour
     private int _minTime = 5;
     private int _DesiredAmount = 10;
     private int _levelAddition = 10;
+    private int _maxShapes = 8;
+    private int ClickedCountSum = 0;
     
+    public DataToSaveReasoning dataToSaveReasoning = new DataToSaveReasoning();
     private TextMeshProUGUI _countdownText;
     public GameObject evaluationWindow;
     public GameObject mainCanvas;
@@ -38,6 +41,9 @@ public class CountdownTimer : MonoBehaviour
         GameManager.sendSumSquare += SetSquareSum;
         GameManager.sendSumTriangle += SetTriangleSum;
         GameManager.sendSumCircle += SetCircleSum;
+        MinMaxMidEvents.sendClickedCountCircle += CountClickedCountSum;
+        MinMaxMidEvents.sendClickedCountTriangle += CountClickedCountSum;
+        MinMaxMidEvents.sendClickedCountSquare += CountClickedCountSum;
     }
 
     private void Start()
@@ -101,6 +107,13 @@ public class CountdownTimer : MonoBehaviour
             backButton.enabled = true;
         }
     }
+    
+    private void SetDataTOSaveReasoning()
+    {
+        dataToSaveReasoning.desiredAmount = _DesiredAmount;
+        dataToSaveReasoning.finalAmount = _squareSum + _triangleSum + _circleSum;
+        dataToSaveReasoning.level = _currentLevel;
+    }
 
     private void ResetDesiredAmount()
     {
@@ -110,6 +123,8 @@ public class CountdownTimer : MonoBehaviour
     {
         GameManager.LevelFinished();
         SetEvaluation();
+        SetDataTOSaveReasoning();
+        LogStatisticsEvents.SendPLayerStatisticsReasoning(dataToSaveReasoning);
         mainCanvas.SetActive(false);
         evaluationWindow.SetActive(true);
         NextLevelSetUp();
@@ -123,6 +138,7 @@ public class CountdownTimer : MonoBehaviour
     { 
         _countdownTime = _nextLevelTime;
         _currentLevel++;
+        ClickedCountSum = 0;
         if (_countdownTime < _minTime)
         {
             _countdownTime = _minTime;
@@ -131,6 +147,7 @@ public class CountdownTimer : MonoBehaviour
     
     private void FirstLevelSetUp()
     {   
+        ClickedCountSum = 0;
         _countdownTime = _firstLevelTime;
         _currentLevel = 1;
     }
@@ -149,5 +166,18 @@ public class CountdownTimer : MonoBehaviour
         FirstLevelSetUp();
         evaluationWindow.SetActive(false);
         StartCoroutine(StartCountdown());
+    }
+
+    private void CountClickedCountSum(int clickedCount)
+    {
+       ClickedCountSum += clickedCount;
+       if (ClickedCountSum == 8)
+       {
+           MinMaxMidEvents.SendClickedCountSum(false);   
+       }
+       else
+       {
+           MinMaxMidEvents.SendClickedCountSum(true);
+       }
     }
 }
