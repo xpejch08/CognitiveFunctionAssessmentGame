@@ -179,7 +179,7 @@ public class DataGetter : MonoBehaviour
                         if (count > 0)
                         {
                             float average = total / count;
-                            timeLastedAllUsers.Add(average); // Add the user's average time lasted to the list.
+                            timeLastedAllUsers.Add(average);
                         }
                     }
                     CalculateUserPercentile();
@@ -208,6 +208,11 @@ public class DataGetter : MonoBehaviour
             percentile = 0;
             return;
         }
+        if (numUsersBelow == totalUsers - 1)
+        {
+            percentile = 100;
+            return;
+        }
         percentile = (float)numUsersBelow / totalUsers * 100;
     }
 
@@ -217,7 +222,7 @@ public class DataGetter : MonoBehaviour
         timeLastedAllUsers.Sort();
         foreach (var average in timeLastedAllUsers)
         {
-            if(average < averageTimeLastedOfPlayer)
+            if(average > averageTimeLastedOfPlayer)
             {
                 numUsersBelow++;
             }

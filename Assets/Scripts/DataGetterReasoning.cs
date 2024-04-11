@@ -136,7 +136,7 @@ public class DataGetterReasoning : MonoBehaviour
                         if (count > 0)
                         {
                             float average = total / count;
-                            finalDeltaAllUsers.Add(average); // Add the user's average time lasted to the list.
+                            finalDeltaAllUsers.Add(average);
                         }
                     }
                     CalculateUserPercentile();
@@ -166,6 +166,11 @@ public class DataGetterReasoning : MonoBehaviour
             percentile = 0;
             return;
         }
+        if (numUsersBelow == totalUsers - 1)
+        {
+            percentile = 100;
+            return;
+        }
         percentile = (float)numUsersBelow / totalUsers * 100;
     }
 
@@ -175,7 +180,7 @@ public class DataGetterReasoning : MonoBehaviour
         finalDeltaAllUsers.Sort();
         foreach (var average in finalDeltaAllUsers)
         {
-            if(average > averageDesiredDeltaOfPlayer)
+            if(average < averageDesiredDeltaOfPlayer)
             {
                 numUsersBelow++;
             }

@@ -12,6 +12,8 @@
 Assets/Firebase/Plugins/x86_64/*
 # IDE settings
 .idea/
+mono_crash.*.blob
+
 
 # Debug information
 game_BurstDebugInformation_DoNotShip/

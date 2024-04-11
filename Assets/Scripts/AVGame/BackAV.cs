@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RestartGame : MonoBehaviour
+public class BackAV : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
     void Start()
@@ -12,6 +12,7 @@ public class RestartGame : MonoBehaviour
 
     private void OnMouseDown()
     {
+        GameManager.BackButtonPressed();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
     }
 }

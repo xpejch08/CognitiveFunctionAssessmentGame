@@ -87,16 +87,17 @@ public class LineGraphMaxObjectsCount : MonoBehaviour
 
     protected void ShowGraph(List<float> valueList)
     {
-        float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
+        float graphHeight = graphContainer.sizeDelta.y - 150;
         float graphWidth = graphContainer.sizeDelta.x - 130;
-        float yMaximum = 16f;
+        float yMaximum = 17f; // The maximum value for y-axis
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
         GameObject lastPointObject = null;
-        for(int i = 0; i < valueList.Count; i++)
+        for (int i = 0; i < valueList.Count; i++)
         {
             float xPosition = 65 + i * xStep;
-            float yPosition = (valueList[i] / yMaximum) * graphHeight + 75; // Offset for the bottom
+            float yValue = Mathf.Clamp(valueList[i], 0, yMaximum);
+            float yPosition = (yValue / yMaximum) * graphHeight + 75; 
             GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition));
             if (lastPointObject != null)
             {
@@ -165,17 +166,18 @@ public class LineGraphMaxObjectsCount : MonoBehaviour
     protected void CreateTicks()
     {
         float graphHeight = graphContainer.sizeDelta.y;
-        float yMaximum = 3f;
-        float yIncrement = yMaximum / 15;
-        float tickSpacing = (graphHeight-140) / 15; 
+        float yMaximum = 17f;
+        float yIncrement = yMaximum / 17;
+        float tickSpacing = (graphHeight-140) / 17;
 
-        for (int i = 0; i <= 15 ; i++) 
+        for (int i = 0; i <= 17; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
-            
+        
             CreateTick(new Vector2(20f, 4f), new Vector2(75, yPosition));
         }
     }
+
 
 
 

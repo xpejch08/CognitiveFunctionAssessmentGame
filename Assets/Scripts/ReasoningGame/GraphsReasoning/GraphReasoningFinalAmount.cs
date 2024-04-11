@@ -84,16 +84,16 @@ public class GraphReasoningFinalAmount : MonoBehaviour
 
     protected void ShowGraph(List<int> valueList)
     {
-        float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
+        float graphHeight = graphContainer.sizeDelta.y - 150;
         float graphWidth = graphContainer.sizeDelta.x - 130;
-        float yMaximum = 500f;
+        float yMaximum = 300f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
         GameObject lastPointObject = null;
         for(int i = 0; i < valueList.Count; i++)
         {
             float xPosition = 65 + i * xStep;
-            float yPosition = (valueList[i] / yMaximum) * graphHeight + 75; // Offset for the bottom
+            float yPosition = (valueList[i] / yMaximum) * graphHeight + 75;
             GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition));
             if (lastPointObject != null)
             {

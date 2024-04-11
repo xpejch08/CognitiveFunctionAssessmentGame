@@ -129,10 +129,23 @@ public class DataSaver : MonoBehaviour
         }
         
     }
-    
+
+    private bool UserIsGuest()
+    {
+        if (GameManager.isGuest)
+        {
+            return true;
+        }
+        return false;
+    }
     //todo clean
     public void SaveData(DataToSave data)
     {
+        if (UserIsGuest())
+        {
+            return;
+        }
+        
         SetTimeLasted(data);
         CheckMaxObjectCount(data);
         if (DecreaseSquareCount(data))
@@ -142,9 +155,8 @@ public class DataSaver : MonoBehaviour
         if (!_maxObjectCountReached)
         {
             return;
-        }
-        //check necesity of next line
-        _dataToSave.playerId = data.playerId;
+        }   
+        LogStatisticsEvents.ShowPLayerStatistics(_dataToSave);
         if (auth.CurrentUser == null)
         {
             Debug.LogError("No authenticated user.");

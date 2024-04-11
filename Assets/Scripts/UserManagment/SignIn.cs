@@ -1,3 +1,4 @@
+using System;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
@@ -9,14 +10,29 @@ public class SignIn : MonoBehaviour
     private FirebaseAuth auth;
     private string _email;
     private string _password;
+    public TextMeshProUGUI ErrorText;
     public TMP_InputField emailInputField;
     public TMP_InputField passwordInputField;
+    public GameObject editorPanel;
     
 
     void Start()
     {
         InitializeFirebase();
+        editorPanel.SetActive(false);
         passwordInputField.contentType = TMP_InputField.ContentType.Password;
+    }
+
+    private void Update()
+    {
+        if (Input.touchCount > 0)   
+        {
+            Touch touch = Input.GetTouch(0);
+            if(touch.phase == TouchPhase.Began)
+            {
+                editorPanel.SetActive(false);
+            }
+        }
     }
 
     private void InitializeFirebase()
@@ -48,7 +64,8 @@ public class SignIn : MonoBehaviour
 
             if (task.IsFaulted)
             {
-                Debug.LogError("Task faulted: " + task.Exception.Flatten().InnerExceptions[0].Message);
+                editorPanel.SetActive(true);
+                ErrorText.text = "Error: " + task.Exception.Flatten().InnerExceptions[0].Message;
                 return;
             }
 
@@ -74,7 +91,8 @@ public class SignIn : MonoBehaviour
 
             if (task.IsFaulted)
             {
-                Debug.LogError("Task faulted: " + task.Exception.Flatten().InnerExceptions[0].Message);
+                editorPanel.SetActive(true);
+                ErrorText.text = "Error: " + task.Exception.Flatten().InnerExceptions[0].Message;
                 return;
             }
 
@@ -87,11 +105,13 @@ public class SignIn : MonoBehaviour
     public void OnLogOutButtonPressed()
     {
         auth.SignOut();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SignInScene");
+        GameManager.isGuest = false;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("SignIn");
     }
     
     public void PlayAsGuest()
     {
+        GameManager.isGuest = true;
         UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
     }
 }

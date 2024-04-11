@@ -70,11 +70,12 @@ public class LineGraph : MonoBehaviour
     {
         scores.RemoveAll(x => x == 1000);
     }
-    protected GameObject CreatePrefab(Vector2 anchoredPosition)
+    protected GameObject CreatePrefab(Vector2 anchoredPosition, int index)
     {
         GameObject gameObject = new GameObject("point", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);
         gameObject.GetComponent<Image>().sprite = _pointPrefab;
+        int storedIndex = index;
         
         RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = anchoredPosition;
@@ -97,7 +98,7 @@ public class LineGraph : MonoBehaviour
         {
             float xPosition = 65 + i * xStep;
             float yPosition = (valueList[i] / yMaximum) * graphHeight + 75; // Offset for the bottom
-            GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition));
+            GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition), i);
             if (lastPointObject != null)
             {
                 CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, 

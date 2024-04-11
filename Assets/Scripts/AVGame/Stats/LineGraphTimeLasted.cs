@@ -43,7 +43,7 @@ public class LineGraphTimeLasted : MonoBehaviour
     private void OnAllDataRetrieved()
     {
         string percentile = _dataGetter.percentile.ToString();
-        percentileText.text = "You are in the " + percentile + "th percentile in AV game players";
+        percentileText.text = "You are better than " + percentile + "% players at the audio visual game";
     }
 
     protected void InitializeTypeToListMap()

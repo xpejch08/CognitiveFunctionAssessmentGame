@@ -43,7 +43,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     private void OnAllDataRetrieved()
     {
         string percentile = _dataGetter.percentile.ToString();
-        percentileText.text = "You are in the " + percentile + "th percentile in Reasoning game players";
+        percentileText.text = "You are better than " + percentile + "% players at the reasoning game";
     }
 
     protected void InitializeTypeToListMap()
@@ -92,27 +92,31 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
         return gameObject;
     }
 
-    protected void ShowGraph(List<int> valueList)
-    {
-        float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
+    protected void ShowGraph(List<int> valueList) {
+        float graphMiddleY = 430f;
+        float graphTotalRange = 140f;
+        float graphHeight = graphContainer.sizeDelta.y - 150;
         float graphWidth = graphContainer.sizeDelta.x - 130;
-        float yMaximum = 100f;
-        float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
+
+        float heightPerUnit = (graphHeight / graphTotalRange);
 
         GameObject lastPointObject = null;
-        for(int i = 0; i < valueList.Count; i++)
-        {
-            float xPosition = 65 + i * xStep;
-            float yPosition = (valueList[i] / yMaximum) * graphHeight + 480; // Offset for the bottom
+        int i = 0;
+        foreach (var value in valueList) {
+            float xPosition = 65 + i * (graphWidth / (valueList.Count - 1));
+            i++;
+            
+            float yPositionFromMiddle = value * heightPerUnit;
+            float yPosition = graphMiddleY + yPositionFromMiddle;
+
             GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition));
-            if (lastPointObject != null)
-            {
-                CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, 
-                    pointGameObject.GetComponent<RectTransform>().anchoredPosition);
+            if (lastPointObject != null) {
+                CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, pointGameObject.GetComponent<RectTransform>().anchoredPosition);
             }
             lastPointObject = pointGameObject;
         }
     }
+
 
 
     protected void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
@@ -142,7 +146,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
         float paddingBottomAxis = 370f;
         float padding = 30f;
         float shiftLeft = 65f;
-        float shiftBottom = 480f;
+        float shiftBottom = 430f;
         float graphWidth = graphContainer.sizeDelta.x;
         float graphHeight = graphContainer.sizeDelta.y;
         
@@ -172,11 +176,11 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     protected void CreateTicks()
     {
         float graphHeight = graphContainer.sizeDelta.y;
-        float yMaximum = 3f;
+        float yMaximum = 140f;
         float yIncrement = yMaximum / 15;
         float tickSpacing = (graphHeight-140) / 15; 
 
-        for (int i = 0; i <= 15 ; i++) 
+        for (int i = 0; i < 15 ; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
             

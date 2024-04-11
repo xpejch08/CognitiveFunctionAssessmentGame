@@ -4,6 +4,8 @@ using UnityEngine.Events;
 public class LogStatisticsEvents : MonoBehaviour
 {
     public static event UnityAction<DataToSave> sendPlayerStatistics;
+    
+    public static event UnityAction<DataToSave> showPlayerStatistics;
     public static event UnityAction<DataToSaveReasoning> sendPlayerStatisticsReasoning;
 
     public static event UnityAction dataRetrievedTriangles;     
@@ -24,6 +26,10 @@ public class LogStatisticsEvents : MonoBehaviour
     public static void SendPLayerStatistics(DataToSave stats)
     {
         sendPlayerStatistics?.Invoke(stats);
+    }
+    public static void ShowPLayerStatistics(DataToSave stats)
+    {
+        showPlayerStatistics?.Invoke(stats);
     }
     public static void SendPLayerStatisticsReasoning(DataToSaveReasoning stats)
     {

@@ -4,6 +4,7 @@ using UnityEngine;
 public class TimedSprite : MonoBehaviour
 {
     public AudioSource audioSource;
+    public AudioSource ClickedAudioSource;
 
     public float minTimeBeforeBeep = 5f;
     public float maxTimeBeforeBeep = 10f;
@@ -46,13 +47,13 @@ public class TimedSprite : MonoBehaviour
         StartBeepRoutine();
     }
 
-    private void OnMouseDown()
+    public void OnMouseDown()
     {
+        ClickedAudioSource.Play();
         if (_canAddTime)
         {
             Debug.Log("Correct timing! Time added.");
             _canAddTime = false;
-            Handheld.Vibrate();
             _reactionTime = Time.time - _timeSoundPlayed;
             UpdateReactionTime();
             StopAllCoroutines();
@@ -62,8 +63,6 @@ public class TimedSprite : MonoBehaviour
         {
             Debug.Log("Wrong timing!");
             GameManager.ShapeMissed();
-            
-            Handheld.Vibrate();
             StopAllCoroutines();
             StartBeepRoutine();
         }

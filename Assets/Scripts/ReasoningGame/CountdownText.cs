@@ -29,9 +29,12 @@ public class CountdownTimer : MonoBehaviour
     public GameObject mainCanvas;
     public TextMeshProUGUI evaluationText;
     public TextMeshProUGUI DesiredAmountText;
+    public TextMeshProUGUI ShapesAvailibleText;
+    public TextMeshProUGUI LevelText;
     public SpriteRenderer backButton;
     public SpriteRenderer nextLevelButton;
     public SpriteRenderer restartButton;
+    private BoxCollider2D nextLevelCollider;
 
 
     private void Awake()
@@ -50,8 +53,10 @@ public class CountdownTimer : MonoBehaviour
     {
         _countdownText = GetComponent<TextMeshProUGUI>();
         evaluationWindow.SetActive(false);
-        
+        InitialiseShapeAvailibleText();
+        nextLevelCollider = nextLevelButton.GetComponent<BoxCollider2D>();
         StartCoroutine(StartCountdown());
+        SetLevelText();
     }
 
     private void UpdateDesiredAmount()
@@ -94,17 +99,11 @@ public class CountdownTimer : MonoBehaviour
         int sum = _squareSum + _triangleSum + _circleSum;
         if(sum > _DesiredAmount)
         {
-            evaluationText.text = "Try Again! \n your sum: " + sum;
-            nextLevelButton.enabled = false;
-            restartButton.enabled = true;
-            backButton.enabled = true;
+            evaluationText.text = "Try Again! \n your sum: " + sum + "\nFor more stats\nsee statistics";
         }
         else
         {
-            evaluationText.text = "Good Job! \n your sum: " + sum;
-            nextLevelButton.enabled = true;
-            restartButton.enabled = false;
-            backButton.enabled = true;
+            evaluationText.text = "Good Job! \n your sum: " + sum + "\nFor more stats\nsee statistics";
         }
     }
     
@@ -127,29 +126,44 @@ public class CountdownTimer : MonoBehaviour
         LogStatisticsEvents.SendPLayerStatisticsReasoning(dataToSaveReasoning);
         mainCanvas.SetActive(false);
         evaluationWindow.SetActive(true);
-        NextLevelSetUp();
+        
         bool passed = true;
-        nextLevelButton.enabled = passed;
-        restartButton.enabled = passed;
-        backButton.enabled = passed;
+        if (_currentLevel == 10)
+        {
+            nextLevelButton.enabled = false;
+            nextLevelCollider.enabled = false;
+            restartButton.enabled = passed;
+            backButton.enabled = passed;   
+        }
+        else
+        {InitialiseShapeAvailibleText();
+            nextLevelButton.enabled = passed;
+            restartButton.enabled = passed;
+            backButton.enabled = passed;   
+        }
     }
 
     private void NextLevelSetUp()
     { 
         _countdownTime = _nextLevelTime;
         _currentLevel++;
+        InitialiseShapeAvailibleText();
         ClickedCountSum = 0;
         if (_countdownTime < _minTime)
         {
             _countdownTime = _minTime;
         }   
+        SetLevelText();
     }
     
     private void FirstLevelSetUp()
     {   
         ClickedCountSum = 0;
+        nextLevelButton.enabled = true;
+        nextLevelCollider.enabled = true;
         _countdownTime = _firstLevelTime;
         _currentLevel = 1;
+        SetLevelText();
     }
     
     private void NextLevelClicked()
@@ -162,15 +176,31 @@ public class CountdownTimer : MonoBehaviour
     private void RestartClicked()
     {
         ResetDesiredAmount();
+        InitialiseShapeAvailibleText();
         mainCanvas.SetActive(true);
         FirstLevelSetUp();
         evaluationWindow.SetActive(false);
         StartCoroutine(StartCountdown());
     }
 
+    private void SetAvailableShapesText(int shapes)
+    {
+        ShapesAvailibleText.text = "Shapes left: " + shapes;
+    }
+    
+    private void SetLevelText()
+    {
+        LevelText.text = "Level: " + _currentLevel;
+    }
+    private void InitialiseShapeAvailibleText()
+    {
+        ShapesAvailibleText.text = "Shapes left: 8";
+    }
     private void CountClickedCountSum(int clickedCount)
     {
+        
        ClickedCountSum += clickedCount;
+       SetAvailableShapesText(_maxShapes-ClickedCountSum);
        if (ClickedCountSum == 8)
        {
            MinMaxMidEvents.SendClickedCountSum(false);   

@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameState gameState;
     
+    public static bool isGuest;
+    
     public static event UnityAction onShapeClicked; 
     
     public static event UnityAction shapeMissed;
