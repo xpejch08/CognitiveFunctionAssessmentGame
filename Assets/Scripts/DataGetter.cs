@@ -16,6 +16,8 @@ public class ReactionTimeLists
     public List<float> reactionTimesAudio = new List<float>();
     public List<float> timeLasted = new List<float>();
     public List<float> maxObjectCount = new List<float>();
+    public List<float> timeLastedAveragesGroupedByDay = new List<float>();
+    public Dictionary<DateTime, List<float>> timeLastedGroupedByDay = new Dictionary<DateTime, List<float>>();
 }
 
 public class DataGetter : MonoBehaviour
@@ -142,8 +144,53 @@ public class DataGetter : MonoBehaviour
                         }   
                         LogStatisticsEvents.DataRetrievedMaxObjectCount();
                     }
+                    else if(type == "timeLastedGroupedByDay")
+                    {
+                        foreach (DataSnapshot childSnapshot in snapshot.Children)
+                        {
+                            if (childSnapshot.HasChild("GameType") &&
+                                childSnapshot.Child("GameType").Value.ToString() == "AV")
+                            {
+                                DataToSave entry = JsonUtility.FromJson<DataToSave>(childSnapshot.GetRawJsonValue());
+                                DateTime dateWithTime = DateTime.Parse(entry.date);
+                                DateTime date = dateWithTime.Date;
+                                if (reactionTimeLists.timeLastedGroupedByDay.ContainsKey(date))
+                                {
+                                    reactionTimeLists.timeLastedGroupedByDay[date].Add(entry.timeLasted);
+                                }
+                                else
+                                {
+                                    reactionTimeLists.timeLastedGroupedByDay.Add(date, new List<float> {entry.timeLasted});
+                                }
+                            }
+                        }
+                        LogStatisticsEvents.DataRetrievedTimeLastedGrouped();
+                    }
                 }
             });
+    }
+
+    public void CalculateAverageOfGroupedTimes()
+    {
+        foreach (var date in reactionTimeLists.timeLastedGroupedByDay.Keys)
+        {
+            float sum = 0;
+            foreach (var time in reactionTimeLists.timeLastedGroupedByDay[date])
+            {
+                sum = sum + time;
+            }
+            float average = sum / reactionTimeLists.timeLastedGroupedByDay[date].Count;
+            reactionTimeLists.timeLastedAveragesGroupedByDay.Add(average);
+        }
+    }
+    public void CreateListFromAverages()
+    {
+        foreach (var date in reactionTimeLists.timeLastedGroupedByDay.Keys)
+        {
+            reactionTimeLists.timeLastedAveragesGroupedByDay.Add(reactionTimeLists.timeLastedGroupedByDay[date][0]);
+        }
+        reactionTimeLists.timeLastedGroupedByDay.Clear();
+        
     }
 
     public void GetAllPlayerAverages()

@@ -14,6 +14,7 @@ public class LineGraphTimeLasted : MonoBehaviour
     public string type;
     private List<float> scores = new List<float>();
     public TextMeshProUGUI percentileText;
+    public TextMeshProUGUI lastTickText;
     private Dictionary<string, List<float>> typeToListMap;
 
     protected void Awake()
@@ -73,6 +74,7 @@ public class LineGraphTimeLasted : MonoBehaviour
             return;
         }
         RemoveDefaultFromData();
+        AssignMidAndLastTickText();
         ShowGraph(scores);
     }
 
@@ -98,7 +100,7 @@ public class LineGraphTimeLasted : MonoBehaviour
     protected void ShowGraph(List<float> valueList)
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
-        float graphWidth = graphContainer.sizeDelta.x - 130;
+        float graphWidth = graphContainer.sizeDelta.x - 140;
         float yMaximum = 150f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
@@ -182,11 +184,23 @@ public class LineGraphTimeLasted : MonoBehaviour
         for (int i = 0; i <= 15 ; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
+            float xPosition = 65 + i * tickSpacing;
             
             CreateTick(new Vector2(20f, 4f), new Vector2(75, yPosition));
+            CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 75));
         }
     }
 
+    public void AssignMidAndLastTickText()
+    {
+        int count = scores.Count;
+        if (count == 1)
+        {
+            lastTickText.text = "14";
+            return;
+        }
+        lastTickText.text = count.ToString();
+    }
 
 
     protected GameObject CreateTick(Vector2 size, Vector2 anchoredPosition)

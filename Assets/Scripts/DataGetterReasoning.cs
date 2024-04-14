@@ -13,6 +13,8 @@ public class ReasoningDataLists
     public List<int> level = new List<int>();
     public List<int> finalAmount = new List<int>();
     public List<int> desiredFinalDelta = new List<int>();
+    public List<int> finalDeltaAveragesGroupedByDay = new List<int>();
+    public Dictionary<DateTime, List<int>> finalDeltaGroupedByDay = new Dictionary<DateTime, List<int>>();
 }
 
 public class DataGetterReasoning : MonoBehaviour
@@ -99,8 +101,44 @@ public class DataGetterReasoning : MonoBehaviour
                         }   
                         LogStatisticsEvents.DataRetrievedFinalAmount();
                     }
+                    else if(type == "finalDeltaGroupedByDay")
+                    {
+                        foreach (DataSnapshot childSnapshot in snapshot.Children)
+                        {
+                            if (childSnapshot.HasChild("GameType") &&
+                                childSnapshot.Child("GameType").Value.ToString() == "Reasoning")
+                            {
+                                DataToSaveReasoning entry = JsonUtility.FromJson<DataToSaveReasoning>(childSnapshot.GetRawJsonValue());
+                                DateTime dateWithTime = DateTime.Parse(entry.date);
+                                DateTime date = dateWithTime.Date;
+                                if (ReasoningData.finalDeltaGroupedByDay.ContainsKey(date))
+                                {
+                                    ReasoningData.finalDeltaGroupedByDay[date].Add(entry.desiredFinalDelta);
+                                }
+                                else
+                                {
+                                    ReasoningData.finalDeltaGroupedByDay.Add(date, new List<int> {entry.desiredFinalDelta});
+                                }
+                            }
+                        }
+                        LogStatisticsEvents.DataRetrievedFinalDeltaGrouped();
+                    }
                 }
             });
+    }
+    
+    public void CalculateAverageOfGroupedFinalDeltas()
+    {
+        foreach (var date in ReasoningData.finalDeltaGroupedByDay.Keys)
+        {
+            int sum = 0;
+            foreach (var time in ReasoningData.finalDeltaGroupedByDay[date])
+            {
+                sum = sum + time;
+            }
+            int average = sum / ReasoningData.finalDeltaGroupedByDay[date].Count;
+            ReasoningData.finalDeltaAveragesGroupedByDay.Add(average);
+        }
     }
 
     public void GetAllPlayerAverages()

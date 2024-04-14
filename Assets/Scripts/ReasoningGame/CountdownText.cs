@@ -136,7 +136,8 @@ public class CountdownTimer : MonoBehaviour
             backButton.enabled = passed;   
         }
         else
-        {InitialiseShapeAvailibleText();
+        {
+            InitialiseShapeAvailibleText();
             nextLevelButton.enabled = passed;
             restartButton.enabled = passed;
             backButton.enabled = passed;   
@@ -159,8 +160,8 @@ public class CountdownTimer : MonoBehaviour
     private void FirstLevelSetUp()
     {   
         ClickedCountSum = 0;
-        nextLevelButton.enabled = true;
         nextLevelCollider.enabled = true;
+        nextLevelButton.enabled = true;
         _countdownTime = _firstLevelTime;
         _currentLevel = 1;
         SetLevelText();

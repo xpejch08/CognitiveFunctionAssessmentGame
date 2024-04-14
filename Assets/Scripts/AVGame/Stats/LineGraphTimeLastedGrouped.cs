@@ -6,7 +6,7 @@ using System.Data.SqlTypes;
 using TMPro;
 using UnityEngine.UI;
 
-public class LineGraphAudio : MonoBehaviour
+public class LineGraphTimeLastedGrouped : MonoBehaviour
 {
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
@@ -18,7 +18,7 @@ public class LineGraphAudio : MonoBehaviour
 
     protected void Awake()
     {
-        LogStatisticsEvents.dataRetrievedAudio += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedTimeLastedGrouped += OnDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
@@ -28,13 +28,14 @@ public class LineGraphAudio : MonoBehaviour
     }
     protected void OnDestroy()
     {
-        LogStatisticsEvents.dataRetrievedAudio -= OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedTimeLastedGrouped -= OnDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()
     {
         CreateAxis();
         CreateTicks();
+        _dataGetter.CalculateAverageOfGroupedTimes();
         ShowNextGraph(type);
     }
 
@@ -48,7 +49,8 @@ public class LineGraphAudio : MonoBehaviour
             {"diamonds", _dataGetter.reactionTimeLists.reactionTimesDiamonds},
             {"audio", _dataGetter.reactionTimeLists.reactionTimesAudio},
             {"timeLasted", _dataGetter.reactionTimeLists.timeLasted},
-            {"maxObjectCount", _dataGetter.reactionTimeLists.maxObjectCount}
+            {"maxObjectCount", _dataGetter.reactionTimeLists.maxObjectCount},
+            {"timeLastedGroupedByDay", _dataGetter.reactionTimeLists.timeLastedAveragesGroupedByDay}
         };
     }
 
@@ -92,7 +94,7 @@ public class LineGraphAudio : MonoBehaviour
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
         float graphWidth = graphContainer.sizeDelta.x - 140;
-        float yMaximum = 3f;
+        float yMaximum = 150f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
         GameObject lastPointObject = null;
@@ -181,6 +183,7 @@ public class LineGraphAudio : MonoBehaviour
             CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 75));
         }
     }
+
     public void AssignMidAndLastTickText()
     {
         int count = scores.Count;
@@ -191,8 +194,6 @@ public class LineGraphAudio : MonoBehaviour
         }
         lastTickText.text = count.ToString();
     }
-
-
 
     protected GameObject CreateTick(Vector2 size, Vector2 anchoredPosition)
     {

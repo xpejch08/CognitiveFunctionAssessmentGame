@@ -21,6 +21,7 @@ public class DataToSave
     public float timeLasted;
     public int maxObjectCount;
     public string shapeType;
+    public string date;
     public string GameType = "AV";
 }
 public class DataSaver : MonoBehaviour
@@ -164,6 +165,7 @@ public class DataSaver : MonoBehaviour
         }
         else
         {   
+            _dataToSave.date = DateTime.Now.ToString("O");
             _dataToSave.playerId = auth.CurrentUser.UserId;
             string json = JsonUtility.ToJson(_dataToSave);
             reference.Child("users").Child(_dataToSave.playerId).Push().SetRawJsonValueAsync(json);   
@@ -184,6 +186,7 @@ public class DataSaver : MonoBehaviour
         _CircleCount = 6;
         _TriangleCount = 4;
         _DiamondCount = 1;
+        _dataToSave.date ="";
         _maxObjectCountReached = false;
     }
 }

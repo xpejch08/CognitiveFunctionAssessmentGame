@@ -13,6 +13,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     public DataGetterReasoning _dataGetter;
     public string type;
     public TextMeshProUGUI percentileText;
+    public TextMeshProUGUI lastTickText;
     private List<int> scores = new List<int>();
     private Dictionary<string, List<int>> typeToListMap;
 
@@ -70,6 +71,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
             return;
         }
         RemoveDefaultFromData();
+        AssignMidAndLastTickText();
         ShowGraph(scores);
     }
 
@@ -96,14 +98,14 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
         float graphMiddleY = 430f;
         float graphTotalRange = 140f;
         float graphHeight = graphContainer.sizeDelta.y - 150;
-        float graphWidth = graphContainer.sizeDelta.x - 130;
+        float graphWidth = graphContainer.sizeDelta.x - 140;
 
         float heightPerUnit = (graphHeight / graphTotalRange);
 
         GameObject lastPointObject = null;
         int i = 0;
         foreach (var value in valueList) {
-            float xPosition = 65 + i * (graphWidth / (valueList.Count - 1));
+            float xPosition = 65 + i * (graphWidth / ValueListNot0(valueList));
             i++;
             
             float yPositionFromMiddle = value * heightPerUnit;
@@ -114,6 +116,18 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
                 CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, pointGameObject.GetComponent<RectTransform>().anchoredPosition);
             }
             lastPointObject = pointGameObject;
+        }
+    }
+    
+    public int ValueListNot0(List<int> valueList)
+    {
+        if(valueList.Count == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return valueList.Count - 1;
         }
     }
 
@@ -176,18 +190,30 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     protected void CreateTicks()
     {
         float graphHeight = graphContainer.sizeDelta.y;
-        float yMaximum = 140f;
+        float yMaximum = 3f;
         float yIncrement = yMaximum / 15;
         float tickSpacing = (graphHeight-140) / 15; 
 
-        for (int i = 0; i < 15 ; i++) 
+        for (int i = 0; i <= 15 ; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
+            float xPosition = 65 + i * tickSpacing;
             
             CreateTick(new Vector2(20f, 4f), new Vector2(75, yPosition));
+            CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 430));
         }
     }
 
+    public void AssignMidAndLastTickText()
+    {
+        int count = scores.Count;
+        if (count == 1)
+        {
+            lastTickText.text = "14";
+            return;
+        }
+        lastTickText.text = count.ToString();
+    }
 
 
     protected GameObject CreateTick(Vector2 size, Vector2 anchoredPosition)

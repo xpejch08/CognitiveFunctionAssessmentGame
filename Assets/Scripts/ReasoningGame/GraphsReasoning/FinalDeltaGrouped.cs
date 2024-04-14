@@ -4,21 +4,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine.UI;
 
-public class LineGraphAudio : MonoBehaviour
+public class FinalDeltaGrouped : MonoBehaviour
 {
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
-    public DataGetter _dataGetter;
+    public DataGetterReasoning _dataGetter;
     public string type;
     public TextMeshProUGUI lastTickText;
-    private List<float> scores = new List<float>();
-    private Dictionary<string, List<float>> typeToListMap;
+    private List<int> scores = new List<int>();
+    private Dictionary<string, List<int>> typeToListMap;
 
     protected void Awake()
     {
-        LogStatisticsEvents.dataRetrievedAudio += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedFinalDeltaGrouped += OnDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
@@ -28,27 +29,27 @@ public class LineGraphAudio : MonoBehaviour
     }
     protected void OnDestroy()
     {
-        LogStatisticsEvents.dataRetrievedAudio -= OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedFinalDeltaGrouped -= OnDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()
     {
         CreateAxis();
         CreateTicks();
+        _dataGetter.CalculateAverageOfGroupedFinalDeltas();
         ShowNextGraph(type);
+        _dataGetter.GetAllPlayerAverages();
     }
 
     protected void InitializeTypeToListMap()
     {
-        typeToListMap = new Dictionary<string, List<float>>
+        typeToListMap = new Dictionary<string, List<int>>
         {
-            {"circles", _dataGetter.reactionTimeLists.reactionTimesCircles},
-            {"squares", _dataGetter.reactionTimeLists.reactionTimesSquares},
-            {"triangles", _dataGetter.reactionTimeLists.reactionTimesTriangles},
-            {"diamonds", _dataGetter.reactionTimeLists.reactionTimesDiamonds},
-            {"audio", _dataGetter.reactionTimeLists.reactionTimesAudio},
-            {"timeLasted", _dataGetter.reactionTimeLists.timeLasted},
-            {"maxObjectCount", _dataGetter.reactionTimeLists.maxObjectCount}
+            {"finalAmount", _dataGetter.ReasoningData.finalAmount},
+            {"desiredAmount", _dataGetter.ReasoningData.desiredAmount},
+            {"level", _dataGetter.ReasoningData.level},
+            {"desiredFinalDelta", _dataGetter.ReasoningData.desiredFinalDelta},
+            {"finalDeltaGroupedByDay", _dataGetter.ReasoningData.finalDeltaAveragesGroupedByDay}
         };
     }
 
@@ -88,27 +89,42 @@ public class LineGraphAudio : MonoBehaviour
         return gameObject;
     }
 
-    protected void ShowGraph(List<float> valueList)
-    {
-        float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
+    protected void ShowGraph(List<int> valueList) {
+        float graphMiddleY = 430f;
+        float graphTotalRange = 140f;
+        float graphHeight = graphContainer.sizeDelta.y - 150;
         float graphWidth = graphContainer.sizeDelta.x - 140;
-        float yMaximum = 3f;
-        float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
+
+        float heightPerUnit = (graphHeight / graphTotalRange);
 
         GameObject lastPointObject = null;
-        for(int i = 0; i < valueList.Count; i++)
-        {
-            float xPosition = 65 + i * xStep;
-            float yPosition = (valueList[i] / yMaximum) * graphHeight + 75; // Offset for the bottom
+        int i = 0;
+        foreach (var value in valueList) {
+            float xPosition = 65 + i * (graphWidth / (ValueListNot0(valueList)));
+            i++;
+            
+            float yPositionFromMiddle = value * heightPerUnit;
+            float yPosition = graphMiddleY + yPositionFromMiddle;
+
             GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition));
-            if (lastPointObject != null)
-            {
-                CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, 
-                    pointGameObject.GetComponent<RectTransform>().anchoredPosition);
+            if (lastPointObject != null) {
+                CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, pointGameObject.GetComponent<RectTransform>().anchoredPosition);
             }
             lastPointObject = pointGameObject;
         }
     }
+    public int ValueListNot0(List<int> valueList)
+    {
+        if(valueList.Count == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return valueList.Count - 1;
+        }
+    }
+
 
 
     protected void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
@@ -138,7 +154,7 @@ public class LineGraphAudio : MonoBehaviour
         float paddingBottomAxis = 370f;
         float padding = 30f;
         float shiftLeft = 65f;
-        float shiftBottom = 75f;
+        float shiftBottom = 430f;
         float graphWidth = graphContainer.sizeDelta.x;
         float graphHeight = graphContainer.sizeDelta.y;
         
@@ -178,9 +194,10 @@ public class LineGraphAudio : MonoBehaviour
             float xPosition = 65 + i * tickSpacing;
             
             CreateTick(new Vector2(20f, 4f), new Vector2(75, yPosition));
-            CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 75));
+            CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 430));
         }
     }
+
     public void AssignMidAndLastTickText()
     {
         int count = scores.Count;

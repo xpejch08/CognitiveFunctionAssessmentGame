@@ -31,6 +31,7 @@ public class GameEnd : MonoBehaviour
         GameManager.avFinished += CountdownFinished;
         LogStatisticsEvents.showPlayerStatistics += SetEvaluationText;
         GameManager.backButtonPressed += NullText;
+        GameManager.restartButtonPressed += NullText;
     }
 
     private void OnDisable()
@@ -38,6 +39,7 @@ public class GameEnd : MonoBehaviour
         GameManager.avFinished -= CountdownFinished;
         LogStatisticsEvents.showPlayerStatistics -= SetEvaluationText;
         GameManager.backButtonPressed -= NullText;
+        GameManager.restartButtonPressed -= NullText;
     }
 
     private void NullText()

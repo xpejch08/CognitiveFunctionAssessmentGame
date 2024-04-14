@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine.UI;
+using TMPro;
 
 public class LineGraphMaxObjectsCount : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class LineGraphMaxObjectsCount : MonoBehaviour
     private RectTransform graphContainer;
     public DataGetter _dataGetter;
     public string type;
+    public TextMeshProUGUI lastTickText;
     private List<float> scores = new List<float>();
     private Dictionary<string, List<float>> typeToListMap;
 
@@ -63,6 +65,7 @@ public class LineGraphMaxObjectsCount : MonoBehaviour
             return;
         }
         RemoveDefaultFromData();
+        AssignMidAndLastTickText();
         ShowGraph(scores);
     }
 
@@ -88,7 +91,7 @@ public class LineGraphMaxObjectsCount : MonoBehaviour
     protected void ShowGraph(List<float> valueList)
     {
         float graphHeight = graphContainer.sizeDelta.y - 150;
-        float graphWidth = graphContainer.sizeDelta.x - 130;
+        float graphWidth = graphContainer.sizeDelta.x - 140;
         float yMaximum = 17f; // The maximum value for y-axis
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
@@ -176,6 +179,27 @@ public class LineGraphMaxObjectsCount : MonoBehaviour
         
             CreateTick(new Vector2(20f, 4f), new Vector2(75, yPosition));
         }
+        graphHeight = graphContainer.sizeDelta.y;
+        yMaximum = 3f;
+        yIncrement = yMaximum / 15;
+        tickSpacing = (graphHeight-140) / 15; 
+
+        for (int i = 0; i <= 15 ; i++) 
+        {
+            float xPosition = 65 + i * tickSpacing;
+            
+            CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 75));
+        }
+    }
+    public void AssignMidAndLastTickText()
+    {
+        int count = scores.Count;
+        if (count == 1)
+        {
+            lastTickText.text = "14";
+            return;
+        }
+        lastTickText.text = count.ToString();
     }
 
 

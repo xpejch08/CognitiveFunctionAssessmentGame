@@ -16,6 +16,7 @@ public class DataToSaveReasoning
     public int level;
     public int finalAmount;
     public int desiredFinalDelta;
+    public string date;
     public string GameType = "Reasoning";
 }
 public class DataSaverReasoning : MonoBehaviour 
@@ -51,6 +52,7 @@ public class DataSaverReasoning : MonoBehaviour
         {   
             _dataToSaveReasoning = data;
             _dataToSaveReasoning.playerId = auth.CurrentUser.UserId;
+            _dataToSaveReasoning.date = DateTime.Now.ToString("O");
             CountAndSetDelta();
             string json = JsonUtility.ToJson(_dataToSaveReasoning);
             reference.Child("users").Child(_dataToSaveReasoning.playerId).Push().SetRawJsonValueAsync(json);   
@@ -68,6 +70,7 @@ public class DataSaverReasoning : MonoBehaviour
         _dataToSaveReasoning.level = 0;
         _dataToSaveReasoning.finalAmount = 0;
         _dataToSaveReasoning.desiredFinalDelta = 0;
+        _dataToSaveReasoning.date = "";
     }
     
     

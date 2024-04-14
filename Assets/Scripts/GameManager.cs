@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public static event UnityAction levelFinished;
     public static event UnityAction avFinished;
     public static event UnityAction backButtonPressed;
+    public static event UnityAction restartButtonPressed;
     
     
     public static event Action<GameState> OnGameStateChanged;
@@ -149,6 +150,10 @@ public class GameManager : MonoBehaviour
     public static void BackButtonPressed()
     {
         backButtonPressed?.Invoke();
+    }
+    public static void RestartButtonPressed()
+    {
+        restartButtonPressed?.Invoke();
     }
 
 }

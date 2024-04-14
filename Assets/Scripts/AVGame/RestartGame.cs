@@ -12,6 +12,7 @@ public class RestartGame : MonoBehaviour
 
     private void OnMouseDown()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
+        GameManager.RestartButtonPressed();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainScene");
     }
 }

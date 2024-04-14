@@ -15,11 +15,14 @@ public class LogStatisticsEvents : MonoBehaviour
     
     public static event UnityAction dataRetrievedAudio;
     public static event UnityAction dataRetrievedTimeLasted;
+    public static event UnityAction dataRetrievedTimeLastedGrouped;
     public static event UnityAction dataRetrievedMaxObjectCount;
     public static event UnityAction dataRetrievedFinalAmount;
     public static event UnityAction dataRetrievedDesiredFinalDelta;
     public static event UnityAction allDataRetrievedTimeLasted;
     public static event UnityAction allDataRetrievedFinalDelta;
+    
+    public static event UnityAction dataRetrievedFinalDeltaGrouped;
     
     
     
@@ -60,6 +63,10 @@ public class LogStatisticsEvents : MonoBehaviour
     {
         dataRetrievedTimeLasted?.Invoke();
     }
+    public static void DataRetrievedTimeLastedGrouped()
+    {
+        dataRetrievedTimeLastedGrouped?.Invoke();
+    }
     public static void DataRetrievedMaxObjectCount()
     {
         dataRetrievedMaxObjectCount?.Invoke();
@@ -71,6 +78,10 @@ public class LogStatisticsEvents : MonoBehaviour
     public static void DataRetrievedDesiredFinalDelta()
     {
         dataRetrievedDesiredFinalDelta?.Invoke();
+    }
+    public static void DataRetrievedFinalDeltaGrouped()
+    {
+        dataRetrievedFinalDeltaGrouped?.Invoke();
     }
     
     public static void AllDataRetrievedTimeLasted()

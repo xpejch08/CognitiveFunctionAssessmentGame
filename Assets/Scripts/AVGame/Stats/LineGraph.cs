@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using TMPro;
+using UnityEditor;
 using UnityEngine.UI;
 
 public class LineGraph : MonoBehaviour
@@ -11,8 +13,11 @@ public class LineGraph : MonoBehaviour
     private RectTransform graphContainer;
     public DataGetter _dataGetter;
     public string type;
+    public TextMeshProUGUI midTickText;
+    public TextMeshProUGUI lastTickText;
     private List<float> scores = new List<float>();
     private Dictionary<string, List<float>> typeToListMap;
+    private int scoresCount;
 
     protected void Awake()
     {
@@ -63,6 +68,7 @@ public class LineGraph : MonoBehaviour
             return;
         }
         RemoveDefaultFromData();
+        AssignMidAndLastTickText();
         ShowGraph(scores);
     }
 
@@ -89,7 +95,7 @@ public class LineGraph : MonoBehaviour
     protected void ShowGraph(List<float> valueList)
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
-        float graphWidth = graphContainer.sizeDelta.x - 130;
+        float graphWidth = graphContainer.sizeDelta.x - 140;
         float yMaximum = 3f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
@@ -108,7 +114,7 @@ public class LineGraph : MonoBehaviour
         }
     }
 
-
+    //todo clean code
     protected void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
     {
         GameObject gameObject = new GameObject("dotConnection", typeof(Image));
@@ -173,9 +179,22 @@ public class LineGraph : MonoBehaviour
         for (int i = 0; i <= 15 ; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
+            float xPosition = 65 + i * tickSpacing;
             
             CreateTick(new Vector2(20f, 4f), new Vector2(75, yPosition));
+            CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 75));
         }
+    }
+
+    public void AssignMidAndLastTickText()
+    {
+        int count = scores.Count;
+        if (count == 1)
+        {
+            lastTickText.text = "14";
+            return;
+        }
+        lastTickText.text = count.ToString();
     }
 
 
