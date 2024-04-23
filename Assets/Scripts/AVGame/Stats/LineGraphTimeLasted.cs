@@ -14,6 +14,7 @@ public class LineGraphTimeLasted : MonoBehaviour
     public string type;
     private List<float> scores = new List<float>();
     public TextMeshProUGUI percentileText;
+    public TextMeshProUGUI RankText;
     public TextMeshProUGUI lastTickText;
     private Dictionary<string, List<float>> typeToListMap;
 
@@ -43,8 +44,11 @@ public class LineGraphTimeLasted : MonoBehaviour
     }
     private void OnAllDataRetrieved()
     {
-        string percentile = _dataGetter.percentile.ToString();
+        double percentileDouble = Math.Round(_dataGetter.percentile,2, MidpointRounding.AwayFromZero);
+        string percentile = percentileDouble.ToString();
         percentileText.text = "You are better than " + percentile + "% players at the audio visual game";
+        Tuple<int,int> rank = _dataGetter.CalculateRank();
+        RankText.text = "Your audio-visual rank is " + rank.Item1 + "/" + rank.Item2 + " players";
     }
 
     protected void InitializeTypeToListMap()

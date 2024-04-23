@@ -19,10 +19,8 @@ public class GameEnd : MonoBehaviour
 
     private void Awake()
     {   
-        DontDestroyOnLoad(evaluationWindow);
+        //DontDestroyOnLoad(evaluationWindow);
         DontDestroyOnLoad(mainCanvas);
-        DontDestroyOnLoad(backButton);
-        DontDestroyOnLoad(restartButton);
         evaluationWindow.SetActive(false);
     }
 
@@ -58,15 +56,8 @@ public class GameEnd : MonoBehaviour
         evaluationWindow.SetActive(false);
     }
 
-    private void SetEvaluation()
-    {
-            restartButton.enabled = true;
-            backButton.enabled = true;
-    }
-
     private void CountdownFinished()
     {
-        SetEvaluation();
         mainCanvas.SetActive(false);
         evaluationWindow.SetActive(true);
     }

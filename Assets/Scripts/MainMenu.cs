@@ -47,4 +47,31 @@ public class MainMenu : MonoBehaviour
    {
        UnityEngine.SceneManagement.SceneManager.LoadScene("Help");
    }
+   public void Back()
+   {
+       UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
+   }
+   public void BackAV()
+   {    
+       GameManager.BackButtonPressed();
+       UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
+   }
+
+   public void RestartAV()
+   {
+       GameManager.RestartButtonPressed();
+         UnityEngine.SceneManagement.SceneManager.LoadScene("MainScene");
+   }
+   public void BackReasoning()
+   {
+       UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
+   }
+   public void NextLevelReasoning()
+   {
+       GameManager.NextLevel();
+   }
+   public void RestartReasoning()
+   {
+       GameManager.RestartClicked();
+   }
 }

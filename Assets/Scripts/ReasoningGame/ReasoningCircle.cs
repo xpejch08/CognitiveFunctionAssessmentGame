@@ -131,6 +131,7 @@ public class ReasoningCircle : MonoBehaviour
         ResetCount();
         DeleteInterval();
         SetUpInterval();
+        _sum = 0;
         AddValues();
         CreateStringWithInterval();
         GameManager.ChangeTextCircle(_intervalDisplay);
@@ -141,6 +142,7 @@ public class ReasoningCircle : MonoBehaviour
         ResetCount();
         _intervalSize = 0;
         _firstValue = 1;
+        _sum = 0;
         DeleteInterval();
         SetUpInterval();
         AddValues();

@@ -19,7 +19,6 @@ public class TimedSprite : MonoBehaviour
 
     void Start()
     {
-        GetComponent<Collider2D>().isTrigger = true;
         GameManager.avFinished += SendDataToSave;
         _dataToSave.fastestReactionTimeAudio = InitialReactionTime;
         _dataToSave.shapeType = "audio";
@@ -47,7 +46,7 @@ public class TimedSprite : MonoBehaviour
         StartBeepRoutine();
     }
 
-    public void OnMouseDown()
+    public void Clicked()
     {
         ClickedAudioSource.Play();
         if (_canAddTime)

@@ -14,6 +14,7 @@ public class ReasoningDataLists
     public List<int> finalAmount = new List<int>();
     public List<int> desiredFinalDelta = new List<int>();
     public List<int> finalDeltaAveragesGroupedByDay = new List<int>();
+    public List<int> overshotCoefficient = new List<int>();
     public Dictionary<DateTime, List<int>> finalDeltaGroupedByDay = new Dictionary<DateTime, List<int>>();
 }
 
@@ -101,25 +102,47 @@ public class DataGetterReasoning : MonoBehaviour
                         }   
                         LogStatisticsEvents.DataRetrievedFinalAmount();
                     }
-                    else if(type == "finalDeltaGroupedByDay")
+                    else if (type == "overshotCoefficient")
                     {
                         foreach (DataSnapshot childSnapshot in snapshot.Children)
                         {
                             if (childSnapshot.HasChild("GameType") &&
                                 childSnapshot.Child("GameType").Value.ToString() == "Reasoning")
                             {
-                                DataToSaveReasoning entry = JsonUtility.FromJson<DataToSaveReasoning>(childSnapshot.GetRawJsonValue());
-                                DateTime dateWithTime = DateTime.Parse(entry.date);
-                                DateTime date = dateWithTime.Date;
-                                if (ReasoningData.finalDeltaGroupedByDay.ContainsKey(date))
+                                DataToSaveReasoning entry =
+                                    JsonUtility.FromJson<DataToSaveReasoning>(childSnapshot.GetRawJsonValue());
+                                ReasoningData.overshotCoefficient.Add(entry.overshotCoefficient);
+                            }
+                        }   
+                        LogStatisticsEvents.DataRetrievedOvershotCoefficient();
+                    }
+                    else if(type == "finalDeltaGroupedByDay")
+                    {
+                        try
+                        {
+                            foreach (DataSnapshot childSnapshot in snapshot.Children)
+                            {
+                                if (childSnapshot.HasChild("GameType") &&
+                                    childSnapshot.Child("GameType").Value.ToString() == "Reasoning")
                                 {
-                                    ReasoningData.finalDeltaGroupedByDay[date].Add(entry.desiredFinalDelta);
-                                }
-                                else
-                                {
-                                    ReasoningData.finalDeltaGroupedByDay.Add(date, new List<int> {entry.desiredFinalDelta});
+                                    DataToSaveReasoning entry = JsonUtility.FromJson<DataToSaveReasoning>(childSnapshot.GetRawJsonValue());
+                                    DateTime dateWithTime = DateTime.Parse(entry.date);
+                                    DateTime date = dateWithTime.Date;
+                                    if (ReasoningData.finalDeltaGroupedByDay.ContainsKey(date))
+                                    {
+                                        ReasoningData.finalDeltaGroupedByDay[date].Add(entry.desiredFinalDelta);
+                                    }
+                                    else
+                                    {
+                                        ReasoningData.finalDeltaGroupedByDay.Add(date, new List<int> {entry.desiredFinalDelta});
+                                    }
                                 }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError($"Error processing finalDeltaGroupedByDay: {ex}");
+                            throw;
                         }
                         LogStatisticsEvents.DataRetrievedFinalDeltaGrouped();
                     }
@@ -195,6 +218,20 @@ public class DataGetterReasoning : MonoBehaviour
         averageDesiredDeltaOfPlayer = sum / ReasoningData.desiredFinalDelta.Count;
     }
 
+    public Tuple<int,int> CalculateRank()
+    {
+        int rank = 1;
+        foreach (var average in finalDeltaAllUsers)
+        {
+            if (average < averageDesiredDeltaOfPlayer)
+            {
+                rank++;
+            }
+        }
+
+        return new Tuple<int, int>(rank, finalDeltaAllUsers.Count);
+    }
+
     public void CalculateUserPercentile()
     {
         int numUsersBelow = CalculateUsersBelowMyAverage();
@@ -218,7 +255,7 @@ public class DataGetterReasoning : MonoBehaviour
         finalDeltaAllUsers.Sort();
         foreach (var average in finalDeltaAllUsers)
         {
-            if(average < averageDesiredDeltaOfPlayer)
+            if(average > averageDesiredDeltaOfPlayer)
             {
                 numUsersBelow++;
             }

@@ -23,6 +23,7 @@ public class LogStatisticsEvents : MonoBehaviour
     public static event UnityAction allDataRetrievedFinalDelta;
     
     public static event UnityAction dataRetrievedFinalDeltaGrouped;
+    public static event UnityAction dataRetrievedOvershotCoefficient;
     
     
     
@@ -91,5 +92,9 @@ public class LogStatisticsEvents : MonoBehaviour
     public static void AllDataRetrievedFinalDelta()
     {
         allDataRetrievedFinalDelta?.Invoke();
+    }
+    public static void DataRetrievedOvershotCoefficient()
+    {
+        dataRetrievedOvershotCoefficient?.Invoke();
     }
 }

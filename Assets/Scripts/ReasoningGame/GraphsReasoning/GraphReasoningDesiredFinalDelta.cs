@@ -14,6 +14,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     public string type;
     public TextMeshProUGUI percentileText;
     public TextMeshProUGUI lastTickText;
+    public TextMeshProUGUI RankText;
     private List<int> scores = new List<int>();
     private Dictionary<string, List<int>> typeToListMap;
 
@@ -43,8 +44,11 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
     }
     private void OnAllDataRetrieved()
     {
-        string percentile = _dataGetter.percentile.ToString();
+        double percentileDouble = Math.Round(_dataGetter.percentile,2, MidpointRounding.AwayFromZero);
+        string percentile = percentileDouble.ToString();
         percentileText.text = "You are better than " + percentile + "% players at the reasoning game";
+        Tuple<int,int> rank = _dataGetter.CalculateRank();
+        RankText.text = "Your reasoning rank is " + rank.Item1 + "/" + rank.Item2 + " players";
     }
 
     protected void InitializeTypeToListMap()
@@ -194,7 +198,7 @@ public class GraphReasoningDesiredFinalDelta : MonoBehaviour
         float yIncrement = yMaximum / 15;
         float tickSpacing = (graphHeight-140) / 15; 
 
-        for (int i = 0; i <= 15 ; i++) 
+        for (int i = 0; i < 15 ; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
             float xPosition = 65 + i * tickSpacing;

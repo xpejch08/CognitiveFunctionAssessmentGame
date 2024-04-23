@@ -56,6 +56,14 @@ public class UpdateMin : MonoBehaviour
         _maxSum = _lastTriangleMax + _lastCircleMax + _lastSquareMax;
         _midSum = _lastTriangleMid + _lastCircleMid + _lastSquareMid;
         UpdateText(_minSum, _maxSum, _midSum);
+        ZeroSum();
+    }
+    
+    private void ZeroSum()
+    {
+        _minSum = 0;
+        _maxSum = 0;
+        _midSum = 0;
     }
 
     private void UpdateText(int min, int max, int mid)

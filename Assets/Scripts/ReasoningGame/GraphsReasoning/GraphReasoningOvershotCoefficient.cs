@@ -3,20 +3,23 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine.UI;
 
-public class GraphReasoningFinalAmount : MonoBehaviour
+public class GraphReasoningOvershotCoefficient : MonoBehaviour
 {
     [SerializeField] private Sprite _pointPrefab;
     private RectTransform graphContainer;
     public DataGetterReasoning _dataGetter;
     public string type;
+    public TextMeshProUGUI lastTickText;
     private List<int> scores = new List<int>();
     private Dictionary<string, List<int>> typeToListMap;
 
     protected void Awake()
     {
-        LogStatisticsEvents.dataRetrievedFinalAmount += OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedOvershotCoefficient += OnDataRetrieved;
         graphContainer = GetComponent<RectTransform>();
         InitializeTypeToListMap();
     }
@@ -26,7 +29,7 @@ public class GraphReasoningFinalAmount : MonoBehaviour
     }
     protected void OnDestroy()
     {
-        LogStatisticsEvents.dataRetrievedFinalAmount -= OnDataRetrieved;
+        LogStatisticsEvents.dataRetrievedOvershotCoefficient -= OnDataRetrieved;
     }
     //todo clean code
     protected virtual void OnDataRetrieved()
@@ -43,7 +46,9 @@ public class GraphReasoningFinalAmount : MonoBehaviour
             {"finalAmount", _dataGetter.ReasoningData.finalAmount},
             {"desiredAmount", _dataGetter.ReasoningData.desiredAmount},
             {"level", _dataGetter.ReasoningData.level},
-            {"desiredFinalDelta", _dataGetter.ReasoningData.desiredFinalDelta}
+            {"desiredFinalDelta", _dataGetter.ReasoningData.desiredFinalDelta},
+            {"finalDeltaGroupedByDay", _dataGetter.ReasoningData.finalDeltaAveragesGroupedByDay},
+            {"overshotCoefficient", _dataGetter.ReasoningData.overshotCoefficient}
         };
     }
 
@@ -60,6 +65,7 @@ public class GraphReasoningFinalAmount : MonoBehaviour
             return;
         }
         RemoveDefaultFromData();
+        AssignMidAndLastTickText();
         ShowGraph(scores);
     }
 
@@ -82,27 +88,42 @@ public class GraphReasoningFinalAmount : MonoBehaviour
         return gameObject;
     }
 
-    protected void ShowGraph(List<int> valueList)
-    {
+    protected void ShowGraph(List<int> valueList) {
+        float graphMiddleY = 455f;
+        float graphTotalRange = 20f;
         float graphHeight = graphContainer.sizeDelta.y - 150;
-        float graphWidth = graphContainer.sizeDelta.x - 130;
-        float yMaximum = 300f;
-        float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
+        float graphWidth = graphContainer.sizeDelta.x - 140;
+
+        float heightPerUnit = (graphHeight / graphTotalRange);
 
         GameObject lastPointObject = null;
-        for(int i = 0; i < valueList.Count; i++)
-        {
-            float xPosition = 65 + i * xStep;
-            float yPosition = (valueList[i] / yMaximum) * graphHeight + 75;
+        int i = 0;
+        foreach (var value in valueList) {
+            float xPosition = 65 + i * (graphWidth / (ValueListNot0(valueList)));
+            i++;
+            
+            float yPositionFromMiddle = value * heightPerUnit;
+            float yPosition = graphMiddleY + yPositionFromMiddle;
+
             GameObject pointGameObject = CreatePrefab(new Vector2(xPosition, yPosition));
-            if (lastPointObject != null)
-            {
-                CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, 
-                    pointGameObject.GetComponent<RectTransform>().anchoredPosition);
+            if (lastPointObject != null) {
+                CreateDotConnection(lastPointObject.GetComponent<RectTransform>().anchoredPosition, pointGameObject.GetComponent<RectTransform>().anchoredPosition);
             }
             lastPointObject = pointGameObject;
         }
     }
+    public int ValueListNot0(List<int> valueList)
+    {
+        if(valueList.Count == 1)
+        {
+            return 1;
+        }
+        else
+        {
+            return valueList.Count - 1;
+        }
+    }
+
 
 
     protected void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
@@ -132,7 +153,7 @@ public class GraphReasoningFinalAmount : MonoBehaviour
         float paddingBottomAxis = 370f;
         float padding = 30f;
         float shiftLeft = 65f;
-        float shiftBottom = 75f;
+        float shiftBottom = 455f;
         float graphWidth = graphContainer.sizeDelta.x;
         float graphHeight = graphContainer.sizeDelta.y;
         
@@ -162,16 +183,37 @@ public class GraphReasoningFinalAmount : MonoBehaviour
     protected void CreateTicks()
     {
         float graphHeight = graphContainer.sizeDelta.y;
-        float yMaximum = 3f;
-        float yIncrement = yMaximum / 15;
-        float tickSpacing = (graphHeight-140) / 15; 
+        float yMaximum = 20f;
+        float yIncrement = yMaximum / 20;
+        float tickSpacing = (graphHeight-140) / 20; 
 
-        for (int i = 0; i <= 15 ; i++) 
+        for (int i = 0; i <= 20 ; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
+            float xPosition = 65 + i * tickSpacing;
             
             CreateTick(new Vector2(20f, 4f), new Vector2(75, yPosition));
         }
+        graphHeight = graphContainer.sizeDelta.y;
+        tickSpacing = (graphHeight-140) / 15; 
+
+        for (int i = 0; i <= 15 ; i++) 
+        {
+            float xPosition = 65 + i * tickSpacing;
+            
+            CreateTick(new Vector2(4f, 20f), new Vector2(xPosition, 455));
+        }
+    }
+
+    public void AssignMidAndLastTickText()
+    {
+        int count = scores.Count;
+        if (count == 1)
+        {
+            lastTickText.text = "14";
+            return;
+        }
+        lastTickText.text = count.ToString();
     }
 
 

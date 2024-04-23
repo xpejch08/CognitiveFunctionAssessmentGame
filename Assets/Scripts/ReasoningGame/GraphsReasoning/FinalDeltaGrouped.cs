@@ -188,7 +188,7 @@ public class FinalDeltaGrouped : MonoBehaviour
         float yIncrement = yMaximum / 15;
         float tickSpacing = (graphHeight-140) / 15; 
 
-        for (int i = 0; i <= 15 ; i++) 
+        for (int i = 0; i < 15 ; i++) 
         {
             float yPosition = 75 + i * tickSpacing;
             float xPosition = 65 + i * tickSpacing;

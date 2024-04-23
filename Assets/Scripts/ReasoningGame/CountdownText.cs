@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 
@@ -11,7 +12,7 @@ public class CountdownTimer : MonoBehaviour
 {
     private int _countdownTime = 20;
     private int _firstLevelTime = 20;
-    private int _countdownSubtract = 5;
+    private int _countdownSubtract = 2;
     private int _nextLevelTime;
     private int _currentLevel = 1;
     private int _squareSum = 0;
@@ -22,9 +23,12 @@ public class CountdownTimer : MonoBehaviour
     private int _levelAddition = 10;
     private int _maxShapes = 8;
     private int ClickedCountSum = 0;
+    private int _overshotCoeficient = 0;
+    private List<int> _finalAmounts = new List<int>();
+    private int _finalDeltaAverage;
     
     public DataToSaveReasoning dataToSaveReasoning = new DataToSaveReasoning();
-    private TextMeshProUGUI _countdownText;
+    public TextMeshProUGUI CountdownText;
     public GameObject evaluationWindow;
     public GameObject mainCanvas;
     public TextMeshProUGUI evaluationText;
@@ -36,8 +40,7 @@ public class CountdownTimer : MonoBehaviour
     public SpriteRenderer restartButton;
     private BoxCollider2D nextLevelCollider;
 
-
-    private void Awake()
+    private void OnEnable()
     {
         GameManager.nextLevel += NextLevelClicked;
         GameManager.firstLevel += RestartClicked;
@@ -46,12 +49,24 @@ public class CountdownTimer : MonoBehaviour
         GameManager.sendSumCircle += SetCircleSum;
         MinMaxMidEvents.sendClickedCountCircle += CountClickedCountSum;
         MinMaxMidEvents.sendClickedCountTriangle += CountClickedCountSum;
-        MinMaxMidEvents.sendClickedCountSquare += CountClickedCountSum;
+        MinMaxMidEvents.sendClickedCountSquare += CountClickedCountSum;   
     }
+
+    private void OnDisable()
+    {
+        GameManager.nextLevel -= NextLevelClicked;
+        GameManager.firstLevel -= RestartClicked;
+        GameManager.sendSumSquare -= SetSquareSum;
+        GameManager.sendSumTriangle -= SetTriangleSum;
+        GameManager.sendSumCircle -= SetCircleSum;
+        MinMaxMidEvents.sendClickedCountCircle -= CountClickedCountSum;
+        MinMaxMidEvents.sendClickedCountTriangle -= CountClickedCountSum;
+        MinMaxMidEvents.sendClickedCountSquare -= CountClickedCountSum;
+    }
+
 
     private void Start()
     {
-        _countdownText = GetComponent<TextMeshProUGUI>();
         evaluationWindow.SetActive(false);
         InitialiseShapeAvailibleText();
         nextLevelCollider = nextLevelButton.GetComponent<BoxCollider2D>();
@@ -72,11 +87,11 @@ public class CountdownTimer : MonoBehaviour
         _nextLevelTime = _countdownTime - _countdownSubtract;
         while (time > 0)
         {
-            _countdownText.text = time.ToString();
+            CountdownText.text = time.ToString();
             yield return new WaitForSeconds(1f);
             time--;
         }
-        _countdownText.text = "0";
+        CountdownText.text = "0";
         
         CountdownFinished();
     }
@@ -99,7 +114,7 @@ public class CountdownTimer : MonoBehaviour
         int sum = _squareSum + _triangleSum + _circleSum;
         if(sum > _DesiredAmount)
         {
-            evaluationText.text = "Try Again! \n your sum: " + sum + "\nFor more stats\nsee statistics";
+            evaluationText.text = "You overshot! \n your sum: " + sum + "\nFor more stats\nsee statistics";
         }
         else
         {
@@ -118,18 +133,38 @@ public class CountdownTimer : MonoBehaviour
     {
         _DesiredAmount = 10;
     }
+
+    private void CalculateFinalDeltaAndAddToList()
+    {
+        int desiredFinalDelta = -(_DesiredAmount - (_squareSum + _triangleSum + _circleSum));
+        _finalAmounts.Add(desiredFinalDelta);
+    }
+
+    private void CalculateAverageFinalDelta()
+    {
+        int allDeltas = 0;
+        for (int i = 0; i < _finalAmounts.Count; i++)
+        {
+            allDeltas += _finalAmounts[i];
+        }
+        _finalDeltaAverage = allDeltas / _finalAmounts.Count;
+    }
     private void CountdownFinished()
     {
         GameManager.LevelFinished();
         SetEvaluation();
         SetDataTOSaveReasoning();
-        LogStatisticsEvents.SendPLayerStatisticsReasoning(dataToSaveReasoning);
+        CalculateFinalDeltaAndAddToList();
         mainCanvas.SetActive(false);
         evaluationWindow.SetActive(true);
         
         bool passed = true;
         if (_currentLevel == 10)
-        {
+        {   
+            CalculateAverageFinalDelta();
+            dataToSaveReasoning.desiredFinalDelta = _finalDeltaAverage;
+            dataToSaveReasoning.overshotCoefficient = _overshotCoeficient;
+            LogStatisticsEvents.SendPLayerStatisticsReasoning(dataToSaveReasoning);
             nextLevelButton.enabled = false;
             nextLevelCollider.enabled = false;
             restartButton.enabled = passed;
@@ -143,12 +178,33 @@ public class CountdownTimer : MonoBehaviour
             backButton.enabled = passed;   
         }
     }
-
+    
+    private void UpdateOverShotCoeficient()
+    {
+        int desiredFinalDelta = -(_DesiredAmount - (_squareSum + _triangleSum + _circleSum));
+        if(desiredFinalDelta > 0)
+        {
+            _overshotCoeficient++;
+        }
+        else
+        {
+            _overshotCoeficient--;
+        
+        }
+    }
+    private void SetSumsToZero()
+    {
+        _squareSum = 0;
+        _triangleSum = 0;
+        _circleSum = 0;
+    }
     private void NextLevelSetUp()
     { 
         _countdownTime = _nextLevelTime;
         _currentLevel++;
         InitialiseShapeAvailibleText();
+        UpdateOverShotCoeficient();
+        SetSumsToZero();
         ClickedCountSum = 0;
         if (_countdownTime < _minTime)
         {
@@ -164,6 +220,7 @@ public class CountdownTimer : MonoBehaviour
         nextLevelButton.enabled = true;
         _countdownTime = _firstLevelTime;
         _currentLevel = 1;
+        _overshotCoeficient = 0;
         SetLevelText();
     }
     

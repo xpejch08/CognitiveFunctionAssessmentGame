@@ -110,6 +110,7 @@ public class ReasoningTriangle : MonoBehaviour
         ResetMinMaxMid();
         ResetCount();
         AddTwoValues();
+        _sum = 0;
         CreateStringWithInterval();
         GameManager.ChangeText(_intervalDisplay);
     }
@@ -119,6 +120,7 @@ public class ReasoningTriangle : MonoBehaviour
         ResetCount();   
         _potentialValues.Clear();
         _firstValue = 1;
+        _sum = 0;
         AddTwoValues();
         CreateStringWithInterval();
         GameManager.ChangeText(_intervalDisplay);

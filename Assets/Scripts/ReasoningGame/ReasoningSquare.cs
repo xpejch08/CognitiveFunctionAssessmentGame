@@ -12,7 +12,6 @@ public class ReasoningSquare : MonoBehaviour
     private int _currentValue;
     private string _intervalDisplay;
     private int _firstValue = 3;
-    private int _intervalSize = 4;
     private int _clickedCount = 0;
     private int _maxValue;
     private int _minValue;
@@ -137,7 +136,6 @@ public class ReasoningSquare : MonoBehaviour
         ResetCount();
         _potentialValues.Clear();
         _firstValue = 3;
-        _intervalSize = 4;
         _sum = 0;
         AddTwoValuesFirst();
         CreateStringWithInterval();

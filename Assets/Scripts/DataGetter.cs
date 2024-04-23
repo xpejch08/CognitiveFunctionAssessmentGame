@@ -245,6 +245,20 @@ public class DataGetter : MonoBehaviour
         }
         averageTimeLastedOfPlayer = sum / reactionTimeLists.timeLasted.Count;
     }
+    
+    public Tuple<int,int> CalculateRank()
+    {
+        int rank = 1;
+        foreach (var average in timeLastedAllUsers)
+        {
+            if (average > averageTimeLastedOfPlayer)
+            {
+                rank++;
+            }
+        }
+
+        return new Tuple<int, int>(rank, timeLastedAllUsers.Count);
+    }
 
     public void CalculateUserPercentile()
     {
@@ -269,7 +283,7 @@ public class DataGetter : MonoBehaviour
         timeLastedAllUsers.Sort();
         foreach (var average in timeLastedAllUsers)
         {
-            if(average > averageTimeLastedOfPlayer)
+            if(average < averageTimeLastedOfPlayer)
             {
                 numUsersBelow++;
             }

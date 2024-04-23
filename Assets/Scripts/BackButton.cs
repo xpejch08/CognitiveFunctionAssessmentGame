@@ -10,7 +10,8 @@ namespace DefaultNamespace
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 GameManager.BackButtonPressed();
-                UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene"); }
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
+            }
         }
     }
 }
