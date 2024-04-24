@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class BackButton : MonoBehaviour
+    public class BackButtonReasoning : MonoBehaviour
     {
         private void Update()
         {

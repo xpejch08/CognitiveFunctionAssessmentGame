@@ -20,7 +20,7 @@ public class GameEnd : MonoBehaviour
     private void Awake()
     {   
         //DontDestroyOnLoad(evaluationWindow);
-        DontDestroyOnLoad(mainCanvas);
+        //DontDestroyOnLoad(mainCanvas);
         evaluationWindow.SetActive(false);
     }
 

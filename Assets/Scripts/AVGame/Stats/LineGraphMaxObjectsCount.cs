@@ -92,7 +92,7 @@ public class LineGraphMaxObjectsCount : MonoBehaviour
     {
         float graphHeight = graphContainer.sizeDelta.y - 150;
         float graphWidth = graphContainer.sizeDelta.x - 140;
-        float yMaximum = 17f; // The maximum value for y-axis
+        float yMaximum = 17f;
         float xStep = (valueList.Count > 1) ? graphWidth / (valueList.Count - 1) : graphWidth;
 
         GameObject lastPointObject = null;
