@@ -19,6 +19,7 @@ public class ReasoningSquare : MonoBehaviour
     private int _sum = 0;
     private bool _canAddShape = true;
     private SpriteRenderer _squareObject;
+    public AudioSource burst;
     
     
     private void AddTwoValuesFirst()
@@ -72,6 +73,7 @@ public class ReasoningSquare : MonoBehaviour
             _clickedCount++;
             string count = _clickedCount.ToString();
             GameManager.ChangeSquareCount(count);
+            burst.Play();
             MinMaxMidEvents.SendClickedCountSquare(1);
             CountMinMaxMid();
             MinMaxMidEvents.SendMinMaxMidSquare(_minValue, _maxValue, _midValue);   

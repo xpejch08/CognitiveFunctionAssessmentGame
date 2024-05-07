@@ -19,6 +19,7 @@ public class ReasoningTriangle : MonoBehaviour
     private int _maxValue;
     private int _minValue;
     private int _midValue;
+    public AudioSource burst;
     
     
     private void AddTwoValues()
@@ -64,6 +65,7 @@ public class ReasoningTriangle : MonoBehaviour
             string count = _clickedCount.ToString();
             GameManager.ChangeTriangleCount(count);
             MinMaxMidEvents.SendClickedCountTriangle(1);
+            burst.Play();
             CountMinMaxMid();
             MinMaxMidEvents.SendMinMaxMidTriangle(_minValue, _maxValue, _midValue);   
         }

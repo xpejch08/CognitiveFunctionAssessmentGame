@@ -17,6 +17,7 @@ public class Diamond : MonoBehaviour
     private IEnumerator _currentRandomAppearanceCoroutine;
     private IEnumerator _currentHideTriangleCoroutine;
     private SpriteRenderer _spriteRenderer;
+    public AudioSource burst;
     private bool Clickable = false;
 
     private void Start()
@@ -94,6 +95,7 @@ public class Diamond : MonoBehaviour
             GameManager.ShapeClicked();
             StopActiveCoroutine();
             ToggleVisibility();
+            burst.Play();
             ObjectCountEvents.ObjectDisappeared();
             _reactionTime = Time.time - _timeShapeAppeared;
             UpdateReactionTime();

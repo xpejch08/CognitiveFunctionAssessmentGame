@@ -20,6 +20,7 @@ public class ReasoningCircle : MonoBehaviour
     private int _midValue;
     private bool _canAddShape = true;
     private SpriteRenderer _circleObject;
+    public AudioSource burst;
     
     
     private void DeleteInterval()
@@ -72,6 +73,7 @@ public class ReasoningCircle : MonoBehaviour
         {
             MinMaxMidEvents.SendClickedCountCircle(1);
             _clickedCount++;
+            burst.Play();
             string count = _clickedCount.ToString();
             GameManager.ChangeCircleCount(count);
             CountMinMaxMid();
