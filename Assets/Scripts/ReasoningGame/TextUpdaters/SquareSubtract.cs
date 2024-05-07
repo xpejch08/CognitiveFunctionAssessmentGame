@@ -1,5 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+// ------------------------------------------------------------------------
+// SquareSubtract.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using UnityEngine;
 
 public class SquareSubtract : MonoBehaviour

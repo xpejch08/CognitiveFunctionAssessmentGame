@@ -1,3 +1,11 @@
+// ------------------------------------------------------------------------
+// LogStatisticsEvents.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+// This class is used for managing the
+// events that are triggered when the application wants to communicate with the database.
 using UnityEngine;
 using UnityEngine.Events;
 

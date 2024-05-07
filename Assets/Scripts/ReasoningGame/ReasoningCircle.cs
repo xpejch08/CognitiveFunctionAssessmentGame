@@ -1,7 +1,12 @@
-using System;
-using System.Collections;
+// ------------------------------------------------------------------------
+// ReasoningCircle.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -33,7 +38,10 @@ public class ReasoningCircle : MonoBehaviour
         _intervalSize += 2;
         _firstValue += 4;
     }
-
+    
+    /*
+     * Add values to the list of potential values
+     */
     private void AddValues()
     {   
         _firstValueCache = _firstValue;
@@ -46,7 +54,10 @@ public class ReasoningCircle : MonoBehaviour
         }
         _firstValue = _firstValueCache;
     }
-
+    
+    /*
+     * Generate sum with random numbers from the interval above the shape
+     */
     private void GenerateSumWithRandomIntervalNumbers()
     {   
         for (int i = 0; i < _clickedCount; i++)
@@ -56,7 +67,6 @@ public class ReasoningCircle : MonoBehaviour
         }
         GameManager.SendSumCircle(_sum);
     }
-
     
     private void CreateStringWithInterval()
     {
@@ -67,6 +77,9 @@ public class ReasoningCircle : MonoBehaviour
         
     }
 
+    /*
+     * When the shape is clicked, add the value of the shape to the sum
+     */
     private void OnMouseDown()
     {
         if (_canAddShape)
@@ -81,6 +94,9 @@ public class ReasoningCircle : MonoBehaviour
         }
     }
 
+    /*
+     * Subtract the value of the shape from the sum
+     */
     private void SubtractCount()
     {
         _clickedCount--;
@@ -98,6 +114,9 @@ public class ReasoningCircle : MonoBehaviour
         MinMaxMidEvents.SendMinMaxMidCircle(_minValue, _maxValue, _midValue);
     }
     
+    /*
+     * Count the min, max and mid potential sums of the shape
+     */
     private void CountMinMaxMid()
     {
         _maxValue = _potentialValues[_potentialValues.Count - 1] * _clickedCount;

@@ -1,7 +1,13 @@
-using System;
-using System.Collections;
+// ------------------------------------------------------------------------
+// ReasoningTriangle.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
+
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -22,6 +28,9 @@ public class ReasoningTriangle : MonoBehaviour
     public AudioSource burst;
     
     
+    /*
+     * Add two values to the list of potential values
+     */
     private void AddTwoValues()
     {
         for (int i = 0; i < 2; i++)
@@ -30,7 +39,10 @@ public class ReasoningTriangle : MonoBehaviour
             _firstValue++;
         }
     }
-
+    
+    /*
+     * Generate sum with random numbers from the interval above the shape
+     */
     private void GenerateSumWithRandomIntervalNumbers()
     {   
         for (int i = 0; i < _clickedCount; i++)
@@ -50,13 +62,19 @@ public class ReasoningTriangle : MonoBehaviour
         
     }
     
+    /*
+     * Count the min, max and mid potential sums of the shape
+     */
     private void CountMinMaxMid()
     {
         _maxValue = _potentialValues[_potentialValues.Count - 1] * _clickedCount;
         _midValue = _potentialValues[_potentialValues.Count / 2] * _clickedCount;
         _minValue = _potentialValues[0] * _clickedCount;
     }
-
+    
+    /*
+     * When the shape is clicked, add the value of the shape to the sum
+     */
     private void OnMouseDown()
     {
         if (_canAddShape)
@@ -74,7 +92,10 @@ public class ReasoningTriangle : MonoBehaviour
     {
         _canAddShape = canAddShape;
     }
-
+    
+    /*
+     * Subtract the value of the shape from the sum
+     */
     private void SubtractCount()
     {
         _clickedCount--;

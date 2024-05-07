@@ -1,10 +1,17 @@
-using System;
+// ------------------------------------------------------------------------
+// SignIn.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+//The script is based on the firebase Unity documentation: https://firebase.google.com/docs/unity/setup
+
 using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 public class SignIn : MonoBehaviour
 {
     private FirebaseAuth auth;
@@ -41,7 +48,6 @@ public class SignIn : MonoBehaviour
         {
             if (task.Result != DependencyStatus.Available)
             {
-                Debug.LogError("Could not resolve all Firebase dependencies: " + task.Result);
                 return;
             }
             
@@ -58,7 +64,6 @@ public class SignIn : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
                 return;
             }
 
@@ -72,7 +77,6 @@ public class SignIn : MonoBehaviour
             
             FirebaseUser newUser = task.Result.User;
             UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
-            Debug.LogFormat("Firebase user created successfully: {0} ({1})", newUser.DisplayName, newUser.Email);
         });
     }
 
@@ -85,7 +89,6 @@ public class SignIn : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
                 return;
             }
 
@@ -98,7 +101,6 @@ public class SignIn : MonoBehaviour
 
             FirebaseUser newUser = task.Result.User;
             UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
-            Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.Email);
         });
     }
     

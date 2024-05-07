@@ -1,13 +1,21 @@
+// ------------------------------------------------------------------------
+// DataSaverReasoning.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+//The script is based on the firebase Unity documentation: https://firebase.google.com/docs/unity/setup
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Firebase.Auth;
 using Firebase.Database;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
-
+/*
+ * This class is used for storing the data which is then sent to the database.
+ */
 [Serializable]
 public class DataToSaveReasoning
 {
@@ -42,6 +50,9 @@ public class DataSaverReasoning : MonoBehaviour
         LogStatisticsEvents.sendPlayerStatisticsReasoning -= SaveData;
     }
     
+    /*
+     * This method is called when the event is triggered. It saves the data to the database.
+     */
     private void SaveData(DataToSaveReasoning data)
     {
         if (auth.CurrentUser == null)

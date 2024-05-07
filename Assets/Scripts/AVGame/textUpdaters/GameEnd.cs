@@ -1,12 +1,14 @@
-using System;
+// ------------------------------------------------------------------------
+// GameEnd.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 
 
-//todo clean code
 public class GameEnd : MonoBehaviour
 {
     
@@ -19,8 +21,6 @@ public class GameEnd : MonoBehaviour
 
     private void Awake()
     {   
-        //DontDestroyOnLoad(evaluationWindow);
-        //DontDestroyOnLoad(mainCanvas);
         evaluationWindow.SetActive(false);
     }
 
@@ -56,6 +56,9 @@ public class GameEnd : MonoBehaviour
         evaluationWindow.SetActive(false);
     }
 
+    /*
+     * When the countdown is finished, the main canvas is disabled and the evaluation window is enabled.
+     */
     private void CountdownFinished()
     {
         mainCanvas.SetActive(false);

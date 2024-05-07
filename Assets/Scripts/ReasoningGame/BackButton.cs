@@ -1,7 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+// ------------------------------------------------------------------------
+// BackButton.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using UnityEngine;
 
 public class BackButton : MonoBehaviour

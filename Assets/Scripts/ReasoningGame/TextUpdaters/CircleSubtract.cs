@@ -1,5 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+// ------------------------------------------------------------------------
+// CircleSubtract.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using UnityEngine;
 
 public class CircleSubtractScript : MonoBehaviour

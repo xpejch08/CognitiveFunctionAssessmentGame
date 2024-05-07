@@ -1,7 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+// ------------------------------------------------------------------------
+// MinMaxMidEvents.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+// This class is used for managing the events that are triggered when the application wants to
+// set the min max and mid values for the reasoning game.
+
 using UnityEngine;
 using UnityEngine.Events;
 

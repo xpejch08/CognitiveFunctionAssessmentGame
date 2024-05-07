@@ -1,3 +1,12 @@
+// ------------------------------------------------------------------------
+// ObjectCountEvents.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+// This class is used for managing the events that are
+// triggered when the application wants to calculate the number of objects in the audio-visual scene.
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,7 +20,7 @@ public class ObjectCountEvents : MonoBehaviour
         objectAppeared?.Invoke();
     }
 
-    public static void ObjectDisappeared()
+    public static void ObjectDisappeared()//
     {
         objectDisappeared?.Invoke();
     }

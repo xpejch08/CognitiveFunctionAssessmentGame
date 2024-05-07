@@ -1,7 +1,11 @@
-using System;
+// ------------------------------------------------------------------------
+// toggleSquare.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
 using System.Collections;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ToggleSquare : MonoBehaviour
@@ -43,6 +47,9 @@ public class ToggleSquare : MonoBehaviour
         Destroy(gameObject);
     }
     
+    /*
+     * Starts the random appearance coroutine of the object after the countdown.
+     */
     private IEnumerator StartAfterCountdown()
     {
         yield return new WaitForSeconds(AddingSquaresTimer);
@@ -50,12 +57,18 @@ public class ToggleSquare : MonoBehaviour
         RandomAppearance();
     }
 
+    /*
+     * Turns off the object after the countdown interval.
+     */
     private IEnumerator TurnOffOnCountdown(float countDownInterval)
     {
         yield return new WaitForSeconds(countDownInterval);
         ToggleVisibility();
     }
     
+    /*
+     * Starts the random appearance coroutine of the object after a random interval.
+     */
     private void RandomAppearance()
     {
         float randomInterval = UnityEngine.Random.Range(RandomAppearanceIntervalMin, RandomAppearanceIntervalMax);
@@ -63,6 +76,9 @@ public class ToggleSquare : MonoBehaviour
         StartCoroutine(_currentRandomAppearanceCoroutine);
     }
     
+    /*
+     * Defines the appearance of the object after a random interval coroutine
+     */
     private IEnumerator AppearAfterRandomInterval(float delay)
     {   
         yield return new WaitForSeconds(delay);
@@ -73,6 +89,9 @@ public class ToggleSquare : MonoBehaviour
         StartCoroutine(_currentHideSquareCoroutine);
     }
     
+    /*
+     * Hides the object after the visible interval.
+     */
     private IEnumerator HideSquareAfterVisibleDelay()
     {
         yield return new WaitForSeconds(VisibleInterval);
@@ -81,6 +100,12 @@ public class ToggleSquare : MonoBehaviour
         GameManager.ShapeMissed();
         RandomAppearance();
     }
+    
+    /*
+     * Stops the active coroutine, toggles the visibility,
+     * plays the burst sound, updates the reaction time and hides the object.
+     * Then starts the random appearance coroutine again.
+     */
     private void OnMouseDown()
     {
         if (IsVisible() && Clickable)
@@ -95,6 +120,9 @@ public class ToggleSquare : MonoBehaviour
         }
     }
     
+    /*
+     * Sends the data to be saved and destroys the object.
+     */
     private void SendDataToSave()
     {
         if (this == null || _spriteRenderer == null) return;
@@ -104,6 +132,9 @@ public class ToggleSquare : MonoBehaviour
         Destroy(gameObject);
     }
     
+    /*
+     * Updates the fastest reaction time if the current reaction time is faster.
+     */
     private void UpdateReactionTime()
     {
         if (_reactionTime < _dataToSave.fastestReactionTimeSquares)

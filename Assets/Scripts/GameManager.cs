@@ -1,14 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+// ------------------------------------------------------------------------
+// GameManager.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+// This class is used for managing the game.
+// It contains events that are triggered when the player interacts with the game.
+
+
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
-    public GameState gameState;
     
     public static bool isGuest;
     
@@ -36,40 +40,6 @@ public class GameManager : MonoBehaviour
     public static event UnityAction backButtonPressed;
     public static event UnityAction restartButtonPressed;
     
-    
-    public static event Action<GameState> OnGameStateChanged;
-    void Awake()
-    {
-        instance = this;
-    }
-
-    private void Start()
-    {
-        ChangeGameState(GameState.MainMenu);
-    }
-
-    public void ChangeGameState(GameState state)
-    {
-        gameState = state;
-
-        switch (state)
-        {
-            case GameState.MainMenu:
-                break;
-            case GameState.Stats:
-                break;
-            case GameState.AudioVisualGame:
-                break;
-            case GameState.ReasoningGame:
-                break;
-            case GameState.Lose:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(state), state, null);
-        }
-
-        OnGameStateChanged?.Invoke(state);
-    }
     
     public static void ShapeClicked()
     {
@@ -156,13 +126,4 @@ public class GameManager : MonoBehaviour
         restartButtonPressed?.Invoke();
     }
 
-}
-
-public enum GameState
-{
-    MainMenu,
-    Stats,
-    AudioVisualGame,
-    ReasoningGame,
-    Lose
 }

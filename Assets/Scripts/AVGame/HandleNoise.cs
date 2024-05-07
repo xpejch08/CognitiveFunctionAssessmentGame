@@ -1,3 +1,10 @@
+// ------------------------------------------------------------------------
+// HandleNoise.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
 using System.Collections;
 using UnityEngine;
 
@@ -8,7 +15,6 @@ public class TimedSprite : MonoBehaviour
 
     public float minTimeBeforeBeep = 5f;
     public float maxTimeBeforeBeep = 10f;
-    public float timeToAdd = 5f;
     
     private const float InitialReactionTime = 1000f;
     private float _reactionTime = 0f;
@@ -24,12 +30,18 @@ public class TimedSprite : MonoBehaviour
         _dataToSave.shapeType = "audio";
         StartBeepRoutine();
     }
-
+    
+    /*
+     * Starts the routine that plays the beep sound and allows the player to click.
+     */
     public void StartBeepRoutine()
     {
         StartCoroutine(BeepAndAllowPressRoutine());
     }
 
+    /*
+     * Coroutine that plays the beep sound and allows the player to click.
+     */
     private IEnumerator BeepAndAllowPressRoutine()
     {
         float randomInterval = UnityEngine.Random.Range(minTimeBeforeBeep, maxTimeBeforeBeep);
@@ -45,7 +57,10 @@ public class TimedSprite : MonoBehaviour
         
         StartBeepRoutine();
     }
-
+    
+    /*
+     * Called through an event, when the player clicks on the sprite.
+     */
     public void Clicked()
     {
         ClickedAudioSource.Play();
@@ -67,6 +82,9 @@ public class TimedSprite : MonoBehaviour
         }
     }
     
+    /*
+     * Sends the data to be saved and destroys the object.
+     */
     private void SendDataToSave()
     {
         if (this == null) return;

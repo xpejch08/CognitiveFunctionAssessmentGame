@@ -1,7 +1,13 @@
-using System;
+// ------------------------------------------------------------------------
+// CircleCount.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CircleCount : MonoBehaviour
 {

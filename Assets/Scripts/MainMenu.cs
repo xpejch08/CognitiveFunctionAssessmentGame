@@ -1,8 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// ------------------------------------------------------------------------
+// MainMenu.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+// This class is used for transitioning to different scense in the application.
 
+using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
     

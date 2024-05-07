@@ -1,7 +1,13 @@
-using System;
+// ------------------------------------------------------------------------
+// TextUpdaterCircle.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TextUpdaterCircle : MonoBehaviour
 {

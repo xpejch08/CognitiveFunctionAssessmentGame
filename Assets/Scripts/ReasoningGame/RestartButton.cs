@@ -1,5 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+// ------------------------------------------------------------------------
+// RestartButton.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
+
 using UnityEngine;
 
 public class RestartButton : MonoBehaviour

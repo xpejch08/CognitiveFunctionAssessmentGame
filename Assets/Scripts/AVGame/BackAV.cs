@@ -1,5 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+// ------------------------------------------------------------------------
+// BackAV.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
 using UnityEngine;
 
 public class BackAV : MonoBehaviour

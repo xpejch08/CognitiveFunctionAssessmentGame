@@ -1,12 +1,22 @@
+// ------------------------------------------------------------------------
+// DataGetterReasoning.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+//The script is based on the firebase Unity documentation: https://firebase.google.com/docs/unity/setup
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/*
+ * This class is used for storing the data from the database for the Reasoning game.
+ */
 public class ReasoningDataLists
 {
     public List<int> desiredAmount = new List<int>();
@@ -34,6 +44,10 @@ public class DataGetterReasoning : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
     }
 
+    /*
+     * This method is used for getting the data from the database for the Reasoning game.
+     * The type parameter is used to specify which data should be retrieved.
+     */
     public void GetPlayerData(String type)
     {
         string userId = auth.CurrentUser.UserId;
@@ -141,7 +155,6 @@ public class DataGetterReasoning : MonoBehaviour
                         }
                         catch (Exception ex)
                         {
-                            Debug.LogError($"Error processing finalDeltaGroupedByDay: {ex}");
                             throw;
                         }
                         LogStatisticsEvents.DataRetrievedFinalDeltaGrouped();

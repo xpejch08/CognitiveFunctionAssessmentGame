@@ -1,5 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+// ------------------------------------------------------------------------
+// NextLevelButton.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using UnityEngine;
 
 public class NextLevelButton : MonoBehaviour

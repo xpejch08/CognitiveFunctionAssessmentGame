@@ -1,13 +1,16 @@
-using System;
+// ------------------------------------------------------------------------
+// CountdownText.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 
-
-//todo clean code
 public class CountdownTimer : MonoBehaviour
 {
     private int _countdownTime = 20;
@@ -73,12 +76,15 @@ public class CountdownTimer : MonoBehaviour
         StartCoroutine(StartCountdown());
         SetLevelText();
     }
-
+    
     private void UpdateDesiredAmount()
     {
         _DesiredAmount += _levelAddition;
     }
-    //todo clean code
+    
+    /*
+     * Coroutine for the countdown
+     */
     private IEnumerator StartCountdown()
     {
         UpdateDesiredAmount();
@@ -108,7 +114,11 @@ public class CountdownTimer : MonoBehaviour
     {
         _circleSum = sum;
     }
-
+    
+    /*
+     * Set the evaluation text based on the sum of all shapes
+     * and the comparison to the desired amount
+     */
     private void SetEvaluation()
     {
         int sum = _squareSum + _triangleSum + _circleSum;
@@ -122,24 +132,37 @@ public class CountdownTimer : MonoBehaviour
         }
     }
     
+    /*
+     * Set the data to save to the database
+     */
     private void SetDataTOSaveReasoning()
     {
         dataToSaveReasoning.desiredAmount = _DesiredAmount;
         dataToSaveReasoning.finalAmount = _squareSum + _triangleSum + _circleSum;
         dataToSaveReasoning.level = _currentLevel;
     }
-
+    
+    /*
+     * Reset the desired amount for the first level
+     * The value gets increased by 10 at the start of each level, that's why it's set to 10
+     */
     private void ResetDesiredAmount()
     {
         _DesiredAmount = 10;
     }
-
+    
+    /*
+     * Calculate the final delta and add it to the list which is used for logging to the database
+     */
     private void CalculateFinalDeltaAndAddToList()
     {
         int desiredFinalDelta = -(_DesiredAmount - (_squareSum + _triangleSum + _circleSum));
         _finalAmounts.Add(desiredFinalDelta);
     }
-
+    
+    /*
+     * Calculate the average of the final deltas in the list
+     */
     private void CalculateAverageFinalDelta()
     {
         int allDeltas = 0;
@@ -149,6 +172,13 @@ public class CountdownTimer : MonoBehaviour
         }
         _finalDeltaAverage = allDeltas / _finalAmounts.Count;
     }
+    
+    /*
+     * Set the evaluation text and the data to save to the database
+     * Calculate the final delta and add it to the list
+     * Calculate the average of the final deltas in the list
+     * Show the evaluation window
+     */
     private void CountdownFinished()
     {
         GameManager.LevelFinished();
@@ -179,6 +209,9 @@ public class CountdownTimer : MonoBehaviour
         }
     }
     
+    /*
+     * Update the overshot coefficient based on the difference between the desired amount and the sum of all shapes
+     */
     private void UpdateOverShotCoeficient()
     {
         int desiredFinalDelta = -(_DesiredAmount - (_squareSum + _triangleSum + _circleSum));
@@ -192,12 +225,20 @@ public class CountdownTimer : MonoBehaviour
         
         }
     }
+    
+    /*
+     * Set the sums of all shapes to 0
+     */
     private void SetSumsToZero()
     {
         _squareSum = 0;
         _triangleSum = 0;
         _circleSum = 0;
     }
+    
+    /*
+     * Setting up of the next level
+     */
     private void NextLevelSetUp()
     { 
         _countdownTime = _nextLevelTime;
@@ -213,6 +254,10 @@ public class CountdownTimer : MonoBehaviour
         SetLevelText();
     }
     
+    
+    /*
+     * Setting up of the first level
+     */
     private void FirstLevelSetUp()
     {   
         ClickedCountSum = 0;
@@ -240,20 +285,34 @@ public class CountdownTimer : MonoBehaviour
         evaluationWindow.SetActive(false);
         StartCoroutine(StartCountdown());
     }
-
+    
+    /*
+     * Set the text for remaining shapes ui element
+     */
     private void SetAvailableShapesText(int shapes)
     {
         ShapesAvailibleText.text = "Shapes left: " + shapes;
     }
     
+    /*
+     * Set the text for the level ui element
+     */
     private void SetLevelText()
     {
         LevelText.text = "Level: " + _currentLevel;
     }
+    
+    /*
+     * Initial setting of the text for the remaining shapes ui element
+     */
     private void InitialiseShapeAvailibleText()
     {
         ShapesAvailibleText.text = "Shapes left: 8";
     }
+    
+    /*
+     * Send how many shapes are left to the min MinMaxMidEvents
+     */
     private void CountClickedCountSum(int clickedCount)
     {
         

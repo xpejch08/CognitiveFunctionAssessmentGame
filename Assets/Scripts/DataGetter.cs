@@ -1,12 +1,22 @@
+// ------------------------------------------------------------------------
+// DataGetter.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+//The script is based on the firebase Unity documentation: https://firebase.google.com/docs/unity/setup
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/*
+ * ReactionTimeLists class is used to store all the audio visual data from the database.
+ */
 public class ReactionTimeLists
 {
     public List<float> reactionTimesTriangles = new List<float>();
@@ -36,7 +46,11 @@ public class DataGetter : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
         timeLastedAllUsers = new List<float>();
     }
-
+    
+    /*
+     * GetPlayerData method is used to get the data of the player from the database.
+     * The type parameter is used to specify which data should be retrieved.
+     */
     public void GetPlayerData(String type)
     {
         string userId = auth.CurrentUser.UserId;
@@ -169,7 +183,6 @@ public class DataGetter : MonoBehaviour
                 }
             });
     }
-
     public void CalculateAverageOfGroupedTimes()
     {
         foreach (var date in reactionTimeLists.timeLastedGroupedByDay.Keys)

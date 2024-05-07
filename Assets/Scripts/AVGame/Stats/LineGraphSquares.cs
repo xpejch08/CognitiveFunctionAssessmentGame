@@ -1,8 +1,12 @@
-using System;
+// ------------------------------------------------------------------------
+// LineGraphSquares.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using UnityEngine.UI;
 using TMPro;
 
@@ -30,7 +34,6 @@ public class LineGraphSquares : MonoBehaviour
     {
         LogStatisticsEvents.dataRetrievedSquares -= OnDataRetrieved;
     }
-    //todo clean code
     protected virtual void OnDataRetrieved()
     {
         CreateAxis();
@@ -52,6 +55,9 @@ public class LineGraphSquares : MonoBehaviour
         };
     }
 
+    /*
+     * Asignes the scores variable used to draw the graph
+     */
     protected void ShowNextGraph(string type)
     {   
         scores.Clear();
@@ -73,6 +79,13 @@ public class LineGraphSquares : MonoBehaviour
     {
         scores.RemoveAll(x => x == 1000);
     }
+    
+    //the following code for creating graphs is inspired by a programmer with an online pseudonym "Code Monkey"
+    //link to his website: https://unitycodemonkey.com/video.php?v=CmU5-v-v1Qo
+    
+    /**
+     * Creates a prefab point for the graph points
+     */
     protected GameObject CreatePrefab(Vector2 anchoredPosition)
     {
         GameObject gameObject = new GameObject("point", typeof(Image));
@@ -87,7 +100,10 @@ public class LineGraphSquares : MonoBehaviour
 
         return gameObject;
     }
-
+    
+    /*
+     * Creates actual points and connections between them
+     */
     protected void ShowGraph(List<float> valueList)
     {
         float graphHeight = graphContainer.sizeDelta.y - 150; // Subtracting the total offset
@@ -110,7 +126,9 @@ public class LineGraphSquares : MonoBehaviour
         }
     }
 
-
+    /*
+     * Function used for creating connections between points
+     */
     protected void CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
     {
         GameObject gameObject = new GameObject("dotConnection", typeof(Image));
@@ -126,12 +144,18 @@ public class LineGraphSquares : MonoBehaviour
         rectTransform.localEulerAngles = new Vector3(0, 0, GetAngleFromVector(dir));
     }
     
+    /*
+     * Function used for calculating the angle of the connection between points
+     */
     protected float GetAngleFromVector(Vector2 dir)
     {
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         return angle;
     }
     
+    /*
+     * Function used for creating the axes of the graph
+     */
     protected void CreateAxis()
     {
         float paddingLeftAxis = 430f;
@@ -151,6 +175,9 @@ public class LineGraphSquares : MonoBehaviour
 
     }
 
+    /*
+     * Function used for creating axis lines
+     */
     protected GameObject CreateAxisLine(Vector2 size, Vector2 anchoredPosition)
     {
         GameObject gameObject = new GameObject("axis", typeof(Image));
@@ -165,6 +192,9 @@ public class LineGraphSquares : MonoBehaviour
         return gameObject;
     }
 
+    /*
+     * Function used for creating ticks on the axes
+     */
     protected void CreateTicks()
     {
         float graphHeight = graphContainer.sizeDelta.y;
@@ -182,7 +212,9 @@ public class LineGraphSquares : MonoBehaviour
         }
     }
 
-    
+    /*
+     * Function that assigns the text of the middle and last tick
+     */
     public void AssignMidAndLastTickText()
     {
         int count = scores.Count;
@@ -195,6 +227,9 @@ public class LineGraphSquares : MonoBehaviour
     }
 
 
+    /*
+     * Function used for creating ticks
+     */
     protected GameObject CreateTick(Vector2 size, Vector2 anchoredPosition)
     {
         GameObject gameObject = new GameObject("tick", typeof(Image));

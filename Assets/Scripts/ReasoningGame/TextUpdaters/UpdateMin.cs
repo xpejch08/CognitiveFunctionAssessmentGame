@@ -1,7 +1,13 @@
-using System;
+// ------------------------------------------------------------------------
+// UpdateMin.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UpdateMin : MonoBehaviour
 {
@@ -29,6 +35,10 @@ public class UpdateMin : MonoBehaviour
         MinMaxMidEvents.sendMinMaxMidCircle += UpdateTriangle;
     }
     
+    /*
+     * Update the min, max and mid values of the square
+     * Then update the sum of all min, max and mid values
+     */
     private void UpdateSquare(int min, int max, int mid)
     {
         _lastSquareMin = min;
@@ -36,6 +46,11 @@ public class UpdateMin : MonoBehaviour
         _lastSquareMid = mid;
         UpdateSum();
     }
+    
+    /*
+     * Update the min, max and mid values of the circle
+     * Then update the sum of all min, max and mid values
+     */
     private void UpdateCircle(int min, int max, int mid)
     {
         _lastCircleMin = min;
@@ -43,6 +58,11 @@ public class UpdateMin : MonoBehaviour
         _lastCircleMid = mid;
         UpdateSum();
     }
+    
+    /*
+     * Update the min, max and mid values of the triangle
+     * Then update the sum of all min, max and mid values
+     */
     private void UpdateTriangle(int min, int max, int mid)
     {
         _lastTriangleMin = min;
@@ -50,6 +70,10 @@ public class UpdateMin : MonoBehaviour
         _lastTriangleMid = mid;
         UpdateSum();
     }
+    
+    /*
+     * Update the sum of all min, max and mid values
+     */
     private void UpdateSum()
     {
         _minSum = _lastTriangleMin + _lastCircleMin + _lastSquareMin;
@@ -59,13 +83,20 @@ public class UpdateMin : MonoBehaviour
         ZeroSum();
     }
     
+    
+    /*
+     * Set the sum of all min, max and mid values to 0
+     */
     private void ZeroSum()
     {
         _minSum = 0;
         _maxSum = 0;
         _midSum = 0;
     }
-
+    
+    /*
+     * Update the text of the min, max and mid UI element
+     */
     private void UpdateText(int min, int max, int mid)
     {
         if (min != null)

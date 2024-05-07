@@ -1,14 +1,22 @@
+// ------------------------------------------------------------------------
+// DataSaver.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+//The script is based on the firebase Unity documentation: https://firebase.google.com/docs/unity/setup
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Firebase.Auth;
 using Firebase.Database;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
 
-
+/*
+ * This class is used for storing the data which is then sent to the database.
+ */
 [Serializable]
 public class DataToSave
 {
@@ -55,7 +63,10 @@ public class DataSaver : MonoBehaviour
         LogStatisticsEvents.sendPlayerStatistics -= SaveData;
     }
     
-    //todo clean code
+    /*
+     * This method decreases the count of the shapes and updates the fastest reaction time for the specific shape.
+     * If the count of all shapes is 0, the method returns false which allows the data to be stored in the database.
+     */
     private bool DecreaseSquareCount(DataToSave data)
     {
         if (data.shapeType == "square")
@@ -90,6 +101,9 @@ public class DataSaver : MonoBehaviour
         return true;
     }
     
+    /*
+     * This method updates the fastest reaction time for the specific shape.
+     */
     private void UpdateFastestReactionTime(float reactionTime, string shapeType)
     {
         if (shapeType == "square" && reactionTime < _dataToSave.fastestReactionTimeSquares)
@@ -114,6 +128,9 @@ public class DataSaver : MonoBehaviour
         }
     }
     
+    /*
+     * This method checks if the max object count has been received for storing to the dataabase.
+     */
     private void CheckMaxObjectCount(DataToSave data)
     {
         if (data.maxObjectCount != 0)
@@ -130,7 +147,10 @@ public class DataSaver : MonoBehaviour
         }
         
     }
-
+    
+    /*
+     * This method checks if the user is a guest.
+     */
     private bool UserIsGuest()
     {
         if (GameManager.isGuest)
@@ -139,7 +159,10 @@ public class DataSaver : MonoBehaviour
         }
         return false;
     }
-    //todo clean
+    
+    /*
+     * This method saves the data to the database.
+     */
     public void SaveData(DataToSave data)
     {
         if (UserIsGuest())

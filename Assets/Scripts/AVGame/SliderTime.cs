@@ -1,4 +1,10 @@
-using System;
+// ------------------------------------------------------------------------
+// SliderTime.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,7 +46,10 @@ public class TimeBar : MonoBehaviour
     {
         Destroy(gameObject);
     }
- 
+    
+    /*
+     * Updates the time slider and checks if the time has run out.
+     */
     private void Update()
     {   
         if (timeRemaining > 0)
@@ -59,6 +68,9 @@ public class TimeBar : MonoBehaviour
         }
     }
     
+    /*
+     * Called when the time runs out.
+     */
     private void TimeOut()
     {
         RestartGame();
@@ -88,6 +100,9 @@ public class TimeBar : MonoBehaviour
         timeSlider.value = timeRemaining;
     }
     
+    /*
+     * If the time remaining is greater after clicking the diamond, set it to the maximum time.
+     */
     private void checkTimeOverflow()
     {
         if (timeRemaining > _gameTime)

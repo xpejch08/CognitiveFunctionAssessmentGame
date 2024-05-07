@@ -1,4 +1,11 @@
-using System;
+// ------------------------------------------------------------------------
+// BackButtonReasoning.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using UnityEngine;
 
 namespace DefaultNamespace

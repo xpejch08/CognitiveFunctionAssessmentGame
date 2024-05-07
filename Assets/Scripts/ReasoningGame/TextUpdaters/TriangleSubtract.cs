@@ -1,6 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+// ------------------------------------------------------------------------
+// TriangleSubtract.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using UnityEngine;
 
 public class TriangleSubtract : MonoBehaviour

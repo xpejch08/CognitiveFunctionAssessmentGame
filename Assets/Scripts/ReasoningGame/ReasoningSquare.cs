@@ -1,9 +1,14 @@
+// ------------------------------------------------------------------------
+// ReasoningSquare.cs
+// ------------------------------------------------------------------------
+// Project: BachelorThesis
+// Author: Stepan Pejchar
+// ------------------------------------------------------------------------
+
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class ReasoningSquare : MonoBehaviour
@@ -22,6 +27,9 @@ public class ReasoningSquare : MonoBehaviour
     public AudioSource burst;
     
     
+    /*
+     * Add two values to the list of potential values
+     */
     private void AddTwoValuesFirst()
     {
         for (int i = 0; i < 2; i++)
@@ -30,7 +38,10 @@ public class ReasoningSquare : MonoBehaviour
             _firstValue++;
         }
     }
-
+    
+    /*
+     * Add four values to the list of potential values
+     */
     private void AddFourValues()
     {
         for (int i = 0; i < 4; i++)
@@ -40,6 +51,9 @@ public class ReasoningSquare : MonoBehaviour
         }
     }
     
+    /*
+     * Remove first two values from the list of potential values
+     */
     private void SubtractFirstTwoValues()
     {
         for (int i = 0; i < 2; i++)
@@ -48,6 +62,10 @@ public class ReasoningSquare : MonoBehaviour
         }
     }
 
+    
+    /*
+     * Generate sum with random numbers from the interval above the shape
+     */
     private void GenerateSumWithRandomIntervalNumbers()
     {   
         for (int i = 0; i < _clickedCount; i++)
@@ -66,6 +84,10 @@ public class ReasoningSquare : MonoBehaviour
         _intervalDisplay += _potentialValues[numberOfValues - 1];
         
     }
+    
+    /*
+     * When the shape is clicked, add the value of the shape to the sum
+     */
     private void OnMouseDown()
     {
         if (_canAddShape)
@@ -83,6 +105,10 @@ public class ReasoningSquare : MonoBehaviour
     {
         _canAddShape = canAddShape;
     }
+    
+    /*
+     * Subtract the value of the shape from the sum
+     */
     private void SubtractCount()
     {
         _clickedCount--;
@@ -99,7 +125,10 @@ public class ReasoningSquare : MonoBehaviour
         CountMinMaxMid();
         MinMaxMidEvents.SendMinMaxMidSquare(_minValue, _maxValue, _midValue);
     }
-
+    
+    /*
+     * Count the min, max and mid potential sums of the shape
+     */
     private void CountMinMaxMid()
     {
         _maxValue = _potentialValues[_potentialValues.Count - 1] * _clickedCount;
